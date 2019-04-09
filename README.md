@@ -37,5 +37,7 @@ This will install all the necessary dependencies based on the package.json file
 Joshua Connelly
 
 ## Version History
+```
 Date		Author			Description
 08Apr2019	Josh Connelly		Initial commit
+```
