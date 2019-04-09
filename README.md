@@ -8,13 +8,6 @@ When two friends began a game of tag on the SAS campus, we had no idea the massi
 
 ## Getting Started
 
-After cloning the repo, run the following commands in the deployment folder:
-sudo apt-get install npm
-sudo npm i -g nodemon
-npm i
-
-This will install all the necessary dependencies based on the package.json file
-
 ### Dependencies
 
 Ubuntu (developed on a Raspberry Pi 1B+)
