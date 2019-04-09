@@ -1,0 +1,54 @@
+<% include partials/header.ejs %>
+    <div class="container form-wrapper">
+        <% if (message != '') { %>
+            <p class="text-center text-danger"><%= message %></p>
+        <% } %>
+        <form class="add-player-form" action="" method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" name="first_name" id="first-name" placeholder="First Name" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" name="last_name" id="last-name" placeholder="Last Name" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group col-md-8">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-7">
+                    <label for="player-img"><b>Player Image</b></label><br>
+                    <input type="file" name="image" id="player-img" class="" required>
+                </div>
+                <div class="form-check col-md-3" style="margin-left: 19px;">
+                  <input class="form-check-input float_right" type="radio" name="subscribe" id="subscribe_yes" value="yes" checked>
+                  <label class="form-check-label" for="subscribe_yes">
+                    Subscribe to email tag alerts
+                  </label>
+                </div>
+                <div class="form-check col" style="margin-left: 19px;">
+                  <input class="form-check-input float-right" type="radio" name="subscribe" id="subscribe_no" value="no">
+                  <label class="form-check-label" for="subscribe_no">
+                    Do not subscribe
+                  </label>
+                </div>
+            </div>
+            <div class="form-row align-self-end">
+                <div class="form-group col align-self-end">
+                    <button type="submit" name="add_button" value="add-only" class="btn btn-outline-primary float-right">Add Player</button>
+                </div>
+                <% if (typeof user != 'undefined' && (user.preferred_username.toLowerCase() == player.tagee_email_address.toLowerCase() || user.preferred_username.toLowerCase() == process.env.ADMIN_EMAIL.toLowerCase())) { %>
+                <div class="form-group col-md-2 align-self-end">
+                    <button type="submit" name="add_button" value="add-and-tag" class="btn btn-primary float-right">Add and Tag Player</button>
+                </div>
+                <% } %>
+            </div>
+        </form>
+    </div>
+</div>
+<% include partials/footer.ejs %>

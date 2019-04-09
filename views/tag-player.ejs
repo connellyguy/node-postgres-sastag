@@ -1,0 +1,29 @@
+<% include partials/header.ejs %>
+    <div class="table-wrapper container">
+        <% if (players.rows.length > 0) {%>
+            <table class="table table-hovered table-responsive-md table-striped shadow" style="width:auto !important; margin: 0 auto">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" style="width:10% !important">Image</th>
+                        <th scope="col" style="width:30% !important">Name</th>
+                        <th scope="col" style="width:15% !important">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% players.rows.forEach((player, index) => { %>
+                        <tr>
+                            <td><img src="/assets/img/<%= player.image %>" class="rounded-circle player-img" alt=""></td>
+                            <td><%= player.first_name %> <%= player.last_name %></td>
+                            <td><form action="/tag/<%= player.id %>" method="get"><button type="submit" class="btn btn-outline-primary">Tag</button></form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                    <tr><td colspan="3" class="text-center"><a href="/players/add" class="btn btn-lg btn-secondary">Add a New Player</a></td></tr>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p class="text-center">No eligible players found. Go <a href="/players/add" >here</a> to add players.</p>
+        <% } %>
+    </div>
+</div>
+<% include partials/footer.ejs %>

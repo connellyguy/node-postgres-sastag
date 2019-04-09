@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="/assets/css/custom.css">-->
+    <title><%= title %></title>
+</head>
+<style>
+    .table-wrapper {
+        margin-top: 80px;
+    }
+
+    .player-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .it-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .add-player-form {
+        margin-top: 80px;
+    }
+
+    .jumbotron {
+        margin-top: 80px;
+    }
+
+    .form-wrapper {
+        margin-top: 80px;
+    }
+
+    .unselectable {
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+    }
+
+</style>
+<body>
+<div class="page-wrapper">
+    <nav class="navbar navbar-light bg-light border-bottom shadow-sm fixed-top">
+        <span class="navbar-brand mb-0 h1" ><a href="/">Who's IT?</a></span>
+        <!--<nav class="my-2 my-md-0 mr-md-3">
+          <a class="p-2 text-dark" href="/players">View Player List</a>
+          <a class="p-2 text-dark" href="/players/add">Add a Player</a>
+        </nav>-->
+        <ul class="nav">
+            <li class="nav-item">
+                <% if (typeof user === "undefined") { %>
+                <a class="btn btn-outline-primary" href='/login'>Login/Sign Up</a>
+                <% } else { %>
+                <form method="post" action="/forces-logout" class="form-inline">
+                    <button type="submit" class="btn btn-outline-primary">
+                        Logout <%=user.name.split(" ")[0]%>
+                    </button>
+                </form>
+                <% } %>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Menu</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="/players">View Player List</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="/players/add">Add a Player</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="/tag">Tag a Player</a>
+                    <div class="dropdown-divider"></div>
+                </div>
+            </li>
+        </ul>
+    </nav>

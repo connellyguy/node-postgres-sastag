@@ -1,0 +1,68 @@
+<% include partials/header.ejs %>
+    <div class="container jumbotron text-center text-wrap">
+        <div class="unselectable">
+            <img src="/assets/img/<%= player.tagee_image %>" class="rounded-circle it-img" alt="IT">
+            <% if (typeof user != "undefined" && user.preferred_username == player.tagee_email_address) { %>
+                <h1 class="font-weight-bolder display-4">YOU</h1>
+                <h1>have been <span class="display-5 font-weight-bold">IT</span> for</h1>
+            <% } else {%>
+            <h1 class="font-weight-bolder display-4"><%= player.tagee_first_name %> <%= player.tagee_last_name %></h1>
+            <h1>has been <span class="display-5 font-weight-bold">IT</span> for</h1>
+            <% } %>
+            <% startStamp = player.tag_time.getTime(); %>
+            <h1 id="strTime" class="font-weight-bold">
+            <script>
+                // Set the date we're counting up from
+                var startStamp = new Date("<%= player.tag_time %>").getTime();
+                var x = setInterval(updateTime, 1000);
+
+                // Update the count down every 1 second
+                function updateTime() {
+
+                // Get todays date and time
+                var now = new Date().getTime();
+
+                // Find the distance between now and the count down date
+                var diff = Math.round((now - startStamp)/1000);
+
+                // Time calculations for days, hours, minutes and seconds
+                var days = Math.floor(diff/(24*60*60));
+                diff = diff-(days*24*60*60);
+                var hours = Math.floor(diff/(60*60));
+                diff = diff-(hours*60*60);
+                var minutes = Math.floor(diff/(60));
+                diff = diff-(minutes*60);
+                var seconds = diff;
+
+                // Output the result in an element with id="demo"
+                document.getElementById("strTime").innerHTML = days + " Day" + (days !== 1 ? "s, " : ", ") + hours + " Hour" + (hours !== 1 ? "s, " : ", ") + minutes + " Minute" + (minutes !== 1 ? "s, " : ", ") + " and " + seconds + " Second" + (seconds !== 1 ? "s" : "");
+                }
+
+                updateTime();
+            </script>
+            <noscript>
+                <%
+                    newDate = new Date();
+                    newStamp = newDate.getTime();
+                    var diff = Math.round((newStamp-startStamp)/1000);
+                    
+                    var days = Math.floor(diff/(24*60*60));
+                    diff = diff-(days*24*60*60);
+                    var hours = Math.floor(diff/(60*60));
+                    diff = diff-(hours*60*60);
+                    var minutes = Math.floor(diff/(60));
+                    diff = diff-(minutes*60);
+                    var seconds = diff;
+                %>
+                <%= days %> Day<%if (days !== 1) {%>s<%}%>, <%= hours %> Hour<%if (hours !== 1) {%>s<%}%>, <%= minutes %> Minute<%if (minutes !== 1)  {%>s<%}%>, and <%= seconds %> Second<%if (seconds !== 1) {%>s<%}%>
+            </noscript>
+            </h1>
+            <br>
+        </div>
+        <% if (typeof user != "undefined" && (user.preferred_username.toLowerCase() == player.tagee_email_address.toLowerCase() || user.preferred_username.toLowerCase() == process.env.ADMIN_EMAIL.toLowerCase())) { %>
+            <a href="/tag" class="btn btn-lg btn-danger">Tag Someone</a>
+        <% } %>
+    </div>
+</div>
+</div>
+<% include partials/footer.ejs %>
