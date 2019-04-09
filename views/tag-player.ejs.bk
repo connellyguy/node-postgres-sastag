@@ -14,7 +14,7 @@
                         <tr>
                             <td><img src="/assets/img/<%= player.image %>" class="rounded-circle player-img" alt=""></td>
                             <td><%= player.first_name %> <%= player.last_name %></td>
-                            <td><button type="submit" class="btn btn-outline-primary" data-toggle="modal" data-target="#tagModal" data-tagee="<%= player.id %>">Tag</button>
+                            <td><form action="/tag/<%= player.id %>" method="get"><button type="submit" class="btn btn-outline-primary">Tag</button></form>
                             </td>
                         </tr>
                     <% }) %>
