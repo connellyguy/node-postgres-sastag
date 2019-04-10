@@ -7,12 +7,13 @@
 				404 ERROR
 			<% } %>
 		</h1>
-		<big> 
+		<p> 
 			<% if (typeof error != "undefined") { %>
-				<%= error.message %>
+				<% err_msg = error.message.replace(/(?:\r\n|\r|\n)/g, '<br>');%>
+				<%- err_msg %>
 			<% } else { %>
 				Page not found.
 			<% } %>
-		</big>
+		</p>
 	</div>
 <% include partials/footer.ejs%>

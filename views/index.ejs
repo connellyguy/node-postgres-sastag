@@ -65,41 +65,45 @@
     </div>
     <div class="container">
         <h3 class="text-center pt-3 pb-3 mb-4 border-top border-bottom">Tag History</h3>
-        <table class="table">
-            <thead class="thead-light table-striped">
-                <tr>
-                    <th scope="col">Tagger</th>
-                    <th scope="col">Tagee</th>
-                    <th scope="col">Tag Time</th>
-                    <th scope="col">Message</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row"><%= player.tagger_first_name %> <%= player.tagger_last_name %></th>
-                    <td><%= player.tagger_first_name %> <%= player.tagger_last_name %></td>
-                    <%  var date = new Date(player.tag_time);
-                        date.setHours(date.getUTCHours() - 4);
-                        var year = date.getUTCFullYear();
-                        var month = date.getUTCMonth() + 1; // getMonth() is zero-indexed, so we'll increment to get the correct month number
-                        var day = date.getUTCDate();
-                        var hours = date.getUTCHours();
-                        var minutes = date.getUTCMinutes();
-                        var seconds = date.getUTCSeconds();
+        <div class="table-responsive-md">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" style="width:17% !important">Tagger</th>
+                        <th scope="col" style="width:17% !important">Tagee</th>
+                        <th scope="col" style="width:20% !important">Tag Time</th>
+                        <th scope="col" class="d-none d-sm-table-cell">Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% hist.rows.forEach((tag,index) => { %>
+                    <tr>
+                        <td><%= tag.tagger_first_name %> <%= tag.tagger_last_name %></th>
+                        <th scope="row"><%= tag.tagee_first_name %> <%= tag.tagee_last_name %></td>
+                        <%  var date = new Date(tag.tag_time);
+                            date.setHours(date.getUTCHours() - 4);
+                            var year = date.getUTCFullYear();
+                            var month = date.getUTCMonth() + 1; // getMonth() is zero-indexed, so we'll increment to get the correct month number
+                            var day = date.getUTCDate();
+                            var hours = date.getUTCHours();
+                            var minutes = date.getUTCMinutes();
+                            var seconds = date.getUTCSeconds();
 
-                        hours = (hours == 0) ? '12' : hours;
-                        ampm = (hours < 12) ? 'AM' : 'PM';
-                        hours = (hours > 12) ? hours - 12 : hours;
-                        minutes = (minutes < 10) ? '0' + minutes : minutes;
-                        seconds = (seconds < 10) ? '0' + seconds: seconds;
+                            hours = (hours == 0) ? '12' : hours;
+                            ampm = (hours < 12) ? 'AM' : 'PM';
+                            hours = (hours > 12) ? hours - 12 : hours;
+                            minutes = (minutes < 10) ? '0' + minutes : minutes;
+                            seconds = (seconds < 10) ? '0' + seconds: seconds;
 
-                        var strTime = hours + ":" + minutes + ":" + seconds + " " + ampm + " EST on " + month + "/" + day + "/" + year;
-                    %>
-                    <td><%= strTime %></td>
-                    <td><%= player.tag_message %></td>
-                </tr>
-            </tbody>
-        </table>
+                            var strTime = month + "/" + day + "/" + year + " - " + hours + ":" + minutes + ":" + seconds + " " + ampm ;
+                        %>
+                        <td><%= strTime %></td>
+                        <td class="d-none d-sm-table-cell"><%= tag.tag_message %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </div>
