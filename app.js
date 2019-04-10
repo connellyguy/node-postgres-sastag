@@ -150,12 +150,12 @@ app.get('/players/add', loginRequired, addPlayerPage);
 app.get('/players/edit/:id', isPlayerCurrentId, editPlayerPage);
 // app.get('/players/delete/:id', deletePlayer);
 app.get('/tag', isPlayerIt, getTagPage);
-app.get('/tag/:id', isPlayerIt, tagPlayer);
+app.post('/tag/:id', isPlayerIt, tagPlayer);
 app.post('/players/add', loginRequired, addPlayer);
 app.post('/players/edit/:id', isPlayerCurrentId, editPlayer);
 app.post('/forces-logout', oidc.forceLogoutAndRevoke(), (req, res) => {});
 
-// 404 Handler
+// 404 Handler (runs if page does not match any other routes)
 app.use(function(req, res, next){
   return next(createError(404));
 });

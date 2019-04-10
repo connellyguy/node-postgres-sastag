@@ -73,19 +73,6 @@ module.exports = {
                         db.query(query, (err, result) => {
                             if (err) {
                                 return next(createError(500,err));
-                            }
-                            if (typeof req.body.add_button != "undefined" && req.body.add_button == "add-and-tag") {
-                                const tag_query = {
-                                    text: "SELECT distinct max(id) as new_id FROM users;",
-                                }
-                                db.query(tag_query, (err,result) => {
-                                    if (err) {
-                                        return next(createError(500,err));
-                                    } else {
-                                        let player=result.rows[0];
-                                        res.redirect('/tag/'+player.new_id);
-                                    }
-                                });
                             } else {
                                 res.redirect('/');
                             }

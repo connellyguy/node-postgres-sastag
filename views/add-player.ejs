@@ -42,11 +42,6 @@
                 <div class="form-group col align-self-end">
                     <button type="submit" name="add_button" value="add-only" class="btn btn-outline-primary float-right">Add Player</button>
                 </div>
-                <% if (typeof user != 'undefined' && (user.preferred_username.toLowerCase() == player.tagee_email_address.toLowerCase() || user.preferred_username.toLowerCase() == process.env.ADMIN_EMAIL.toLowerCase())) { %>
-                <div class="form-group col-md-2 align-self-end">
-                    <button type="submit" name="add_button" value="add-and-tag" class="btn btn-primary float-right">Add and Tag Player</button>
-                </div>
-                <% } %>
             </div>
         </form>
     </div>

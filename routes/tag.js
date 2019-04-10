@@ -7,18 +7,27 @@ module.exports = {
             if (err) {
                 res.redirect('/');
             }
-            res.render('tag-player.ejs', {
-                title: 'Welcome to SAS Tag | Tag a Player'
-                ,players: result
-            });
+            if(typeof req.userContext != 'undefined') {
+                res.render('tag-player.ejs', {
+                    title: 'Welcome to SAS Tag | Tag a Player'
+                    ,players: result,
+                    user: req.userContext.userinfo,
+                });
+            } else {
+                res.render('tag-player.ejs', {
+                    title: 'Welcome to SAS Tag | Tag a Player'
+                    ,players: result,
+                });
+            }
         });
     },
 
     tagPlayer: (req, res, next) => {
         let tageeId = req.params.id;
+        let tag_message = req.body.message_text;
         let query = {
-            text: "INSERT INTO tag_history(tagger_id, tagee_id) SELECT tagee_id AS tagger_id, $1 AS tagee_id FROM v_last_tag;",
-            values: [tageeId],
+            text: "INSERT INTO tag_history(tagger_id, tagee_id, tag_message) SELECT tagee_id AS tagger_id, $1 AS tagee_id, $2 as tag_message FROM v_last_tag;",
+            values: [tageeId, tag_message],
         };
 
         //execute query
@@ -42,6 +51,7 @@ module.exports = {
                         let tagee_first_name = lt.tagee_first_name;
                         let tagee_last_name = lt.tagee_last_name; 
                         let tag_time = lt.tag_time;
+                        let tag_message = lt.tag_message;
 
                         var date = new Date(tag_time);
                         date.setHours(date.getUTCHours() - 4);
@@ -64,16 +74,21 @@ module.exports = {
                             if (err) {
                                 return next(createError(500, err));
                             } else {
-                                // setup email data
-                                let mailOptions = {
-                                    from: '"SAS Tag" <noreplywhoisitsas.com@gmail.com>', // sender address
-                                    to: email_result.rows[0].email_string, // list of receivers
-                                    subject: "Tag Alert: " + tagee_first_name + " is IT", // Subject line
-                                    html: "<p>" + tagee_first_name + " " + tagee_last_name + " was tagged by " + tagger_first_name + " " + tagger_last_name + " at " + hours + ":" + minutes + ":" + seconds + " " + ampm + " EST on " + month + "/" + day + "/" + year + ".</p>",
-                                };
+                                let addresses = email_result.rows[0].email_string;
+                                if (addresses.length > 0) {
+                                    // setup email data
+                                    let mailOptions = {
+                                        from: '"SAS Tag" <noreplywhoisitsas.com@gmail.com>', // sender address
+                                        to: email_result.rows[0].email_string, // list of receivers
+                                        subject: "Tag Alert: " + tagee_first_name + " is IT", // Subject line
+                                        html: 
+                                        "<p>" + tagee_first_name + " " + tagee_last_name + " was tagged by " + tagger_first_name + " " + tagger_last_name + " at " + hours + ":" + minutes + ":" + seconds + " " + ampm + " EST on " + month + "/" + day + "/" + year + ".</p>" +
+                                        "<h3>Message:</h3><p>" + tag_message + "</p>",
+                                    };
 
-                                // send mail with defined transport object
-                                let info = transporter.sendMail(mailOptions)
+                                    // send mail with defined transport object
+                                    let info = transporter.sendMail(mailOptions)
+                                }
                             }
                         });
                         res.redirect('/');
