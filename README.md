@@ -14,6 +14,7 @@ Ubuntu (developed on a Raspberry Pi 1B+)
 apt-get
 npm (node package manager)
 pm2 (process manager -- only necessary if planning to run always-on)
+PostgreSQL
 
 ### Installing
 
@@ -25,6 +26,8 @@ npm i
 ```
 
 This will install all the necessary dependencies based on the package.json file
+
+PostgreSQL database details coming later...
 
 ## Author
 Joshua Connelly
