@@ -1,6 +1,6 @@
 module.exports = {
     getTagPage: (req, res) => {
-        let query = "SELECT * FROM v_players WHERE id NOT IN (SELECT tagger_id from v_last_tag) AND id NOT IN (SELECT tagee_id from v_last_tag) ORDER BY id ASC;"; // query database to get all the players
+        let query = "SELECT * FROM v_players WHERE id NOT IN (SELECT tagger_id from v_last_tag) AND id NOT IN (SELECT tagee_id from v_last_tag) ORDER BY last_name ASC;"; // query database to get all the players
 
         // execute query
         db.query(query, (err, result) => {

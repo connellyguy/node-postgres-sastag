@@ -1,6 +1,6 @@
 module.exports = {
     getPlayerList: (req, res) => {
-        let query = "SELECT * FROM v_players ORDER BY id ASC"; // query database to get all the players
+        let query = "SELECT * FROM v_players ORDER BY last_name ASC"; // query database to get all the players
 
         // execute query
         db.query(query, (err, result) => {
