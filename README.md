@@ -36,8 +36,8 @@ Joshua Connelly
 
 ## Version History
 ```
-Date		    Author			    Description
-08Apr2019	  Josh Connelly		Initial commit
+Date      Author      Description
+08Apr2019   Josh Connelly   Initial commit
 
 10Apr2019   Josh Connelly   Added modal tag window and message functionality
 ```
