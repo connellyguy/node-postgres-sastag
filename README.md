@@ -4,7 +4,7 @@ A simple webapp for tracking who is IT and tag history for an office game of tag
 
 ## Description
 
-When two friends began a game of tag on the SAS campus, we had no idea the massive undertaking it would become. We hope the T.A.G. Initiative will never die
+When two friends began a game of tag on the SAS campus, we had no idea the team phenomenon it would become. We hope the T.A.G. Initiative will never die
 
 ## Getting Started
 
