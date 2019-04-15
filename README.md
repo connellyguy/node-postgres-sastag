@@ -11,9 +11,15 @@ When two friends began a game of tag on the SAS campus, we had no idea the massi
 ### Dependencies
 
 Ubuntu (developed on a Raspberry Pi 1B+)
+
 apt-get
+
+node.js
+
 npm (node package manager)
+
 pm2 (process manager -- only necessary if planning to run always-on)
+
 PostgreSQL
 
 ### Installing
