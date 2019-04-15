@@ -29,6 +29,8 @@ This will install all the necessary dependencies based on the package.json file
 
 PostgreSQL database details coming later...
 
+Requires a .env file for configuration. Details coming later...
+
 ## Author
 Joshua Connelly
 
