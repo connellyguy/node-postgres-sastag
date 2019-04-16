@@ -1,6 +1,7 @@
-# Environment variable files #
+# Environment files #
 ##############################
 .env
+public/assets/img/*
 
 # Node modules #
 ###################
