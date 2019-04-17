@@ -1,0 +1,75 @@
+</head>
+<style>
+    .table-wrapper {
+        margin-top: 80px;
+    }
+
+    .player-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .it-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .add-player-form {
+        margin-top: 80px;
+    }
+
+    .jumbotron {
+        margin-top: 80px;
+    }
+
+    .form-wrapper {
+        margin-top: 80px;
+    }
+
+    .dash-wrapper {
+        margin-top: 80px;
+    }
+
+    .unselectable {
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+    }
+
+    .table-nonfluid {
+        width: auto !important;
+    }
+
+</style>
+<body>
+<div class="page-wrapper">
+    <nav class="navbar navbar-light bg-light border-bottom shadow-sm fixed-top">
+        <span class="navbar-brand mb-0 h1" ><a href="/">Who's IT?</a></span>
+        <ul class="nav">
+            <li class="nav-item">
+                <% if (typeof user === "undefined") { %>
+                <a class="btn btn-outline-primary" href='/login'>Login/Sign Up</a>
+                <% } else { %>
+                <form method="post" action="/forces-logout" class="form-inline">
+                    <button type="submit" class="btn btn-outline-primary">
+                        Logout <%=user.name.split(" ")[0]%>
+                    </button>
+                </form>
+                <% } %>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Menu</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="/players">View Player List</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="/players/add">Add a Player</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item nav-link" href="/tag">Tag a Player</a>
+                    <div class="dropdown-divider"></div>
+                </div>
+            </li>
+        </ul>
+    </nav>

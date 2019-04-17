@@ -5,7 +5,7 @@ module.exports = {
         // execute query
         db.query(query, (err, result) => {
             if (err) {
-                res.redirect('/');
+                return next(createError(500,err));
             }
             if(typeof req.userContext != 'undefined') {
                 res.render('tag-player.ejs', {
