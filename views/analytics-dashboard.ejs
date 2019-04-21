@@ -4,7 +4,7 @@
 
 <% include partials/header-bottom-half.ejs %>
 <div class="container dash-wrapper">
-	<div id="timeline" style="height: 600px;"/>
+	<div id="timeline" class="chart" style="height: 600px;"/>
 </div>
 
 <script type="text/javascript">
@@ -18,7 +18,7 @@
 
         dataTable.addColumn({ type: 'string', id: 'IT' });
         dataTable.addColumn({ type: 'string', id: 'dummy bar label' });
-        dataTable.addColumn({ type: 'string', role: 'tooltip' });
+        dataTable.addColumn({ type: 'string', role: 'tooltip', 'p': {'html': true} });
         dataTable.addColumn({ type: 'date', id: 'Start' });
         dataTable.addColumn({ type: 'date', id: 'End' });
         dataTable.addRows([
@@ -41,18 +41,57 @@
         			let prev_minute = prev_time.getMinutes();
         			let prev_second = prev_time.getSeconds();
         		%>
-        ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', null, 'Tooltip', new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
+        ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', null, calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
         <% 	};
         	prev_time = tag.tag_time;
+            if (index === tag_history.rows.length - 1) {
+                tag.tagger_first_name = tag.tagee_first_name;
+                tag.tagger_last_name = tag.tagee_last_name;
+                let tag_time = tag.tag_time;
+                let year = tag_time.getFullYear();
+                let month = tag_time.getMonth();
+                let day = tag_time.getDate();
+                let hour = tag_time.getHours();
+                let minute = tag_time.getMinutes();
+                let second = tag_time.getSeconds();
+
+                let prev_year = prev_time.getFullYear();
+                let prev_month = prev_time.getMonth();
+                let prev_day = prev_time.getDate();
+                let prev_hour = prev_time.getHours();
+                let prev_minute = prev_time.getMinutes();
+                let prev_second = prev_time.getSeconds();
+                %>
+                ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', null, calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date()), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date() ],
+                <%
+            }
     	}); %>
+
         ]);
 
         var options = {
         	timeline: {singleColor: '#5B69FD'},
+            tooltip: { isHtml: true },
         };
+
+        function calcDateDiff(startDate, endDate) {
+            var diff = Math.round((endDate-startDate)/1000);
+            
+            var days = Math.floor(diff/(24*60*60));
+            diff = diff-(days*24*60*60);
+            var hours = Math.floor(diff/(60*60));
+            diff = diff-(hours*60*60);
+            var minutes = Math.floor(diff/(60));
+
+            return '<p>&nbsp' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + ' &nbsp</p>';
+        }
 
         chart.draw(dataTable, options);
     }
+
+    $(window).resize(function(){
+        drawChart();
+    });
   </script>
 
 <% include partials/footer.ejs%>
