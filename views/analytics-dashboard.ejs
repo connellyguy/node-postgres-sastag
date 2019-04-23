@@ -32,6 +32,7 @@
 		var container = document.getElementById('timeline');
         var chart = new google.visualization.Timeline(container);
         var dataTable = new google.visualization.DataTable();
+        console.log(new Date());
 
         dataTable.addColumn({ type: 'string', id: 'IT' });
         dataTable.addColumn({ type: 'string', id: 'dummy bar label' });
@@ -47,14 +48,14 @@
         			let year = tag_time.getFullYear();
         			let month = tag_time.getMonth();
         			let day = tag_time.getDate();
-        			let hour = tag_time.getHours();
+        			let hour = tag_time.getHours() - 4;
         			let minute = tag_time.getMinutes();
         			let second = tag_time.getSeconds();
 
         			let prev_year = prev_time.getFullYear();
         			let prev_month = prev_time.getMonth();
         			let prev_day = prev_time.getDate();
-        			let prev_hour = prev_time.getHours();
+        			let prev_hour = prev_time.getHours() - 4;
         			let prev_minute = prev_time.getMinutes();
         			let prev_second = prev_time.getSeconds();
         		%>
@@ -64,22 +65,22 @@
             if (index === tag_history.rows.length - 1) {
                 tag.tagger_first_name = tag.tagee_first_name;
                 tag.tagger_last_name = tag.tagee_last_name;
-                let tag_time = tag.tag_time;
+                let tag_time = new Date();
                 let year = tag_time.getFullYear();
                 let month = tag_time.getMonth();
                 let day = tag_time.getDate();
-                let hour = tag_time.getHours();
+                let hour = tag_time.getHours() - 4;
                 let minute = tag_time.getMinutes();
                 let second = tag_time.getSeconds();
 
                 let prev_year = prev_time.getFullYear();
                 let prev_month = prev_time.getMonth();
                 let prev_day = prev_time.getDate();
-                let prev_hour = prev_time.getHours();
+                let prev_hour = prev_time.getHours() - 4;
                 let prev_minute = prev_time.getMinutes();
                 let prev_second = prev_time.getSeconds();
                 %>
-                ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', null, calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date()), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date() ],
+                ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', null, calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
                 <%
             }
     	}); %>
