@@ -11,7 +11,7 @@
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link active" href="#">
-              <span data-feather="home"></span>
+              <span data-feather="grid"></span>
               Dashboard <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -59,7 +59,7 @@
         			let prev_minute = prev_time.getMinutes();
         			let prev_second = prev_time.getSeconds();
         		%>
-        ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', null, calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
+        ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', ' ', calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
         <% 	};
         	prev_time = tag.tag_time;
             if (index === tag_history.rows.length - 1) {
@@ -80,7 +80,7 @@
                 let prev_minute = prev_time.getMinutes();
                 let prev_second = prev_time.getSeconds();
                 %>
-                ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', null, calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
+                ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', ' ', calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ]
                 <%
             }
     	}); %>
@@ -111,5 +111,10 @@
         drawChart();
     });
   </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script>
+    feather.replace();
+</script>
 
 <% include partials/footer.ejs%>
