@@ -76,18 +76,31 @@ module.exports = {
                             } else {
                                 let addresses = email_result.rows[0].email_string;
                                 if (addresses.length > 0) {
-                                    // setup email data
-                                    let mailOptions = {
-                                        from: '"SAS Tag" <noreplywhoisitsas.com@gmail.com>', // sender address
-                                        to: email_result.rows[0].email_string, // list of receivers
-                                        subject: "Tag Alert: " + tagee_first_name + " is IT", // Subject line
-                                        html: 
-                                        "<p>" + tagee_first_name + " " + tagee_last_name + " was tagged by " + tagger_first_name + " " + tagger_last_name + " at " + hours + ":" + minutes + ":" + seconds + " " + ampm + " EST on " + month + "/" + day + "/" + year + ".</p>" +
-                                        "<h3>Message:</h3><p>" + tag_message + "</p>",
-                                    };
 
-                                    // send mail with defined transport object
-                                    let info = transporter.sendMail(mailOptions)
+                                    res.render('tag_alert_email.ejs', {
+                                        tagee_first_name: tagee_first_name,
+                                        tagee_last_name: tagee_last_name,
+                                        tagger_first_name: tagger_first_name,
+                                        tagger_last_name: tagger_last_name,
+                                        hours: hours,
+                                        minutes: minutes,
+                                        seconds: seconds,
+                                        ampm: ampm,
+                                        month: month,
+                                        day: day,
+                                        year: year,
+                                        tag_message: tag_message
+                                    }, function(err, html) {
+
+                                        var mailOptions = {
+                                            from: '"SAS Tag" <noreplywhoisitsas.com@gmail.com>', // sender address
+                                            to: email_result.rows[0].email_string, // list of receivers
+                                            subject: "Tag Alert: " + tagee_first_name + " is IT", // Subject line
+                                            html: html,
+                                        };
+
+                                      let info = transporter.sendMail(mailOptions)
+                                    });
                                 }
                             }
                         });
