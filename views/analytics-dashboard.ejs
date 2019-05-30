@@ -19,7 +19,41 @@
       </div>
     </nav>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-	   <div id="timeline" class="chart" style="height: 600px;"/>
+        <div class="row mx-sm-auto">
+	       <div id="timeline" class="chart" style="height: 500px;"/>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md">
+                    <div class="table-responsive-md">
+                        <table class="table table-hovered table-responsive-md table-striped shadow">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" style="width:10% !important">Rank</th>
+                                    <th scope="col" style="width:45% !important">IT</th>
+                                    <th scope="col" class="text-right" style="width:45% !important">Time as IT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% longest_time.rows.forEach((it,index) => { %>
+                                <tr>
+                                    <td><%= index + 1 %></td>
+                                    <th scope="row"><%= it.first_name %> <%= it.last_name %></td>
+                                    <td class="text-right"><%= Math.round(it.time_as_it) %> (s)</td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <p>Test text row 2</p>
+                </div>
+                <div class="col-md">
+                    <p>Test text row 3</p>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 </div>
