@@ -16,21 +16,34 @@ module.exports = {
                 if (err) {
                     return next(createError(500,err));
                 }
-                
-                if(typeof req.userContext != 'undefined') {
-                    res.render('analytics-dashboard.ejs', {
-                        title: 'Welcome to SAS Tag | Charts',
-                        user: req.userContext.userinfo,
-                        tag_history: result,
-                        longest_time: lt_result,
+                db.query(shortavg_query, (err, sa_result) => {
+                    if (err) {
+                        return next(createError(500,err));
+                    }
+                    db.query(mosttag_query, (err, mt_result) => {
+                        if (err) {
+                            return next(createError(500,err));
+                        }   
+                        if(typeof req.userContext != 'undefined') {
+                            res.render('analytics-dashboard.ejs', {
+                                title: 'Welcome to SAS Tag | Charts',
+                                user: req.userContext.userinfo,
+                                tag_history: result,
+                                longest_time: lt_result,
+                                shortest_avg: sa_result,
+                                most_tags: mt_result,
+                            });
+                        } else {
+                            res.render('analytics-dashboard.ejs', {
+                                title: 'Welcome to SAS Tag | Charts',
+                                tag_history: result,
+                                longest_time: lt_result,
+                                shortest_avg: sa_result,
+                                most_tags: mt_result,
+                            });
+                        }
                     });
-                } else {
-                    res.render('analytics-dashboard.ejs', {
-                        title: 'Welcome to SAS Tag | Charts',
-                        tag_history: result,
-                        longest_time: lt_result,
-                    });
-                }
+                });
             });
         });
     },

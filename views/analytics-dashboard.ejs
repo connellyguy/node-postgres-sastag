@@ -30,8 +30,8 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col" style="width:10% !important">Rank</th>
-                                    <th scope="col" style="width:45% !important">IT</th>
-                                    <th scope="col" class="text-right" style="width:45% !important">Time as IT</th>
+                                    <th scope="col" style="width:55% !important">Player</th>
+                                    <th scope="col" class="text-right" style="width:35% !important">Total Time as IT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,7 +39,18 @@
                                 <tr>
                                     <td><%= index + 1 %></td>
                                     <th scope="row"><%= it.first_name %> <%= it.last_name %></td>
-                                    <td class="text-right"><%= Math.round(it.time_as_it) %> (s)</td>
+                                        <% 
+                                        const it_duration = moment.duration(it.time_as_it, 'seconds');
+                                        var time_it_str = '';
+                                        if (it_duration.days() >= 2) {
+                                            time_it_str += it_duration.days() + ' Days, '
+                                        } else if (it_duration.days()) {
+                                            time_it_str += it_duration.days() + ' Day, '
+                                        }
+                                        it_duration.subtract(it_duration.days(),'d');
+                                        time_it_str += moment().startOf('day').seconds(it_duration.asSeconds()).format('HH:mm:ss');
+                                        %>
+                                    <td class="text-right"><%= time_it_str %></td>
                                 </tr>
                                 <% }); %>
                             </tbody>
@@ -47,10 +58,59 @@
                     </div>
                 </div>
                 <div class="col-md">
-                    <p>Test text row 2</p>
+                    <div class="table-responsive-md">
+                        <table class="table table-hovered table-responsive-md table-striped shadow">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" style="width:10% !important">Rank</th>
+                                    <th scope="col" style="width:55% !important">Player</th>
+                                    <th scope="col" class="text-right" style="width:35% !important">Avg Time as IT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% shortest_avg.rows.forEach((it,index) => { %>
+                                <tr>
+                                    <td><%= index + 1 %></td>
+                                    <th scope="row"><%= it.first_name %> <%= it.last_name %></td>
+                                        <% 
+                                        const avg_it_duration = moment.duration(it.avg_time_as_it, 'seconds');
+                                        var time_it_str = '';
+                                        if (avg_it_duration.days() >= 2) {
+                                            time_it_str += avg_it_duration.days() + ' Days, '
+                                        } else if (avg_it_duration.days()) {
+                                            time_it_str += avg_it_duration.days() + ' Day, '
+                                        }
+                                        avg_it_duration.subtract(avg_it_duration.days(),'d');
+                                        time_it_str += moment().startOf('day').seconds(avg_it_duration.asSeconds()).format('HH:mm:ss');
+                                        %>
+                                    <td class="text-right"><%= time_it_str %></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="col-md">
-                    <p>Test text row 3</p>
+                    <div class="table-responsive-md">
+                        <table class="table table-hovered table-responsive-md table-striped shadow">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" style="width:10% !important">Rank</th>
+                                    <th scope="col" style="width:55% !important">Player</th>
+                                    <th scope="col" class="text-right" style="width:35% !important">Times Tagged</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% most_tags.rows.forEach((it,index) => { %>
+                                <tr>
+                                    <td><%= index + 1 %></td>
+                                    <th scope="row"><%= it.first_name %> <%= it.last_name %></td>
+                                    <td class="text-right"><%= Math.round(it.number_of_its) %></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,28 +156,7 @@
         ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', ' ', calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
         <% 	};
         	prev_time = tag.tag_time;
-            if (index === tag_history.rows.length - 1) {
-                tag.tagger_first_name = tag.tagee_first_name;
-                tag.tagger_last_name = tag.tagee_last_name;
-                let tag_time = new Date();
-                let year = tag_time.getFullYear();
-                let month = tag_time.getMonth();
-                let day = tag_time.getDate();
-                let hour = tag_time.getHours() - 4;
-                let minute = tag_time.getMinutes();
-                let second = tag_time.getSeconds();
-
-                let prev_year = prev_time.getFullYear();
-                let prev_month = prev_time.getMonth();
-                let prev_day = prev_time.getDate();
-                let prev_hour = prev_time.getHours() - 4;
-                let prev_minute = prev_time.getMinutes();
-                let prev_second = prev_time.getSeconds();
-                %>
-                ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', ' ', calcDateDiff(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>)), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ]
-                <%
-            }
-    	}); %>
+            }); %>
 
         ]);
 
