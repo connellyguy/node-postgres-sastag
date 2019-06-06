@@ -153,7 +153,7 @@
         			let prev_minute = prev_time.getMinutes();
         			let prev_second = prev_time.getSeconds();
         		%>
-        ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', ' ', createTooltip(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>),'<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>','<%= tag.tagee_first_name %> <%= tag.tagee_last_name %>'), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
+        ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', ' ', createTooltip(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>),'<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>','<%if (tag.tagee_id !== tag.tagger_id){%><%= tag.tagee_first_name %> <%= tag.tagee_last_name %><%}%>'), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
         <% 	};
         	prev_time = tag.tag_time;
             }); %>
