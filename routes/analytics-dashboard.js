@@ -2,9 +2,9 @@ module.exports = {
     getDashboard: (req, res) => {
         // query database for last month of tag history
         let query = "SELECT * FROM v_tag_history WHERE tag_time > (select distinct max(tag_time) - '1 month'::interval FROM tag_history) ORDER BY tag_time ASC;";
-        let longtime_query = "SELECT * FROM v_taggregate ORDER BY time_as_it LIMIT 10;";
-        let shortavg_query = "SELECT * FROM v_taggregate ORDER BY avg_time_as_it LIMIT 10;";
-        let mosttag_query = "SELECT * FROM v_taggregate ORDER BY number_of_its DESC LIMIT 10;";
+        let longtime_query = "SELECT * FROM v_taggregate ORDER BY time_as_it LIMIT 15;";
+        let shortavg_query = "SELECT * FROM v_taggregate ORDER BY avg_time_as_it LIMIT 15;";
+        let mosttag_query = "SELECT * FROM v_taggregate ORDER BY number_of_its DESC LIMIT 15;";
 
         // execute query
         db.query(query, (err, result) => {
