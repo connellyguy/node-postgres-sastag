@@ -134,10 +134,12 @@
             return '<p>&nbsp' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + ' &nbsp<br>&nbspTagged By: ' + tagged_by + ' &nbsp<br>&nbspTagged: ' + tagged + '<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
     }
 
+    var timeFrame = '1 month'
+
     function getChartData() {
         var dataRows = [];
         $.ajax({
-        url: "/db/timeline/1%20month",
+        url: "/db/timeline/" + timeFrame,
         success: function (result) {
                 dataRows = []
                 let prev_time = new Date(); 
@@ -149,6 +151,9 @@
                         var dataRow = [];
                         tagger_full_name = tag.tagger_first_name + ' ' + tag.tagger_last_name;
                         tagee_full_name = tag.tagee_first_name + ' ' + tag.tagee_last_name;
+                        if (tag.tagee_id == tag.tagger_id) {
+                            tagee_full_name = '';
+                        };
                         prev_tagger_full_name = tag.prev_tagger_first_name + ' ' + tag.prev_tagger_last_name;
                         dataRow.push(tagger_full_name);
                         dataRow.push(' ');
