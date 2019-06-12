@@ -120,9 +120,56 @@
 
 <script type="text/javascript">
     google.charts.load('current', {packages: ['corechart','timeline']});
-    google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(getChartData);
 
-    function drawChart() {
+    function genTooltip(startDate, endDate, tagged_by, tagged) {
+            var diff = Math.round((endDate-startDate)/1000);
+            
+            var days = Math.floor(diff/(24*60*60));
+            diff = diff-(days*24*60*60);
+            var hours = Math.floor(diff/(60*60));
+            diff = diff-(hours*60*60);
+            var minutes = Math.floor(diff/(60));
+
+            return '<p>&nbsp' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + ' &nbsp<br>&nbspTagged By: ' + tagged_by + ' &nbsp<br>&nbspTagged: ' + tagged + '<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+    }
+
+    function getChartData() {
+        var dataRows = [];
+        $.ajax({
+        url: "/db/timeline/1%20month",
+        success: function (result) {
+                dataRows = []
+                let prev_time = new Date(); 
+                result.forEach((tag, index) => {
+                    let tag_time = new Date(tag.tag_time);
+                    if (index > 0) {
+                        tag_time.setHours(tag_time.getHours() - 4)
+
+                        var dataRow = [];
+                        tagger_full_name = tag.tagger_first_name + ' ' + tag.tagger_last_name;
+                        tagee_full_name = tag.tagee_first_name + ' ' + tag.tagee_last_name;
+                        prev_tagger_full_name = tag.prev_tagger_first_name + ' ' + tag.prev_tagger_last_name;
+                        dataRow.push(tagger_full_name);
+                        dataRow.push(' ');
+                        dataRow.push(genTooltip(prev_time, tag_time, prev_tagger_full_name, tagee_full_name));
+                        dataRow.push(prev_time);
+                        dataRow.push(tag_time);
+                        dataRows.push(dataRow);
+                    };
+                    prev_time = tag_time;
+                });
+            },
+        error: function (err) {
+            var dataRows = [];
+            console.log('Error on ajax request');
+        }
+        }).done(function() { 
+            drawChart(dataRows);
+        });
+    }
+
+    function drawChart(chartData) {
 		var container = document.getElementById('timeline');
         var chart = new google.visualization.Timeline(container);
         var dataTable = new google.visualization.DataTable();
@@ -133,55 +180,18 @@
         dataTable.addColumn({ type: 'string', role: 'tooltip', 'p': {'html': true} });
         dataTable.addColumn({ type: 'date', id: 'Start' });
         dataTable.addColumn({ type: 'date', id: 'End' });
-        dataTable.addRows([
-        	<% let prev_time = new Date(); 
-        	tag_history.rows.forEach((tag, index) => {
-        		if (index > 0) {
-        			let tag_time = tag.tag_time;
-
-        			let year = tag_time.getFullYear();
-        			let month = tag_time.getMonth();
-        			let day = tag_time.getDate();
-        			let hour = tag_time.getHours() - 4;
-        			let minute = tag_time.getMinutes();
-        			let second = tag_time.getSeconds();
-
-        			let prev_year = prev_time.getFullYear();
-        			let prev_month = prev_time.getMonth();
-        			let prev_day = prev_time.getDate();
-        			let prev_hour = prev_time.getHours() - 4;
-        			let prev_minute = prev_time.getMinutes();
-        			let prev_second = prev_time.getSeconds();
-        		%>
-        ['<%= tag.tagger_first_name %> <%= tag.tagger_last_name %>', ' ', genTooltip(new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>),new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>), '<%= tag.prev_tagger_first_name %> <%= tag.prev_tagger_last_name %>','<%= tag.tagee_first_name %> <%= tag.tagee_last_name %>'), new Date(<%= prev_year %>, <%= prev_month %>, <%= prev_day %>, <%= prev_hour %>, <%= prev_minute %>, <%= prev_second %>), new Date(<%= year %>, <%= month %>, <%= day %>, <%= hour %>, <%= minute %>, <%= second %>) ],
-        <% 	};
-        	prev_time = tag.tag_time;
-    	}); %>
-
-        ]);
+        dataTable.addRows(chartData);
 
         var options = {
         	timeline: {singleColor: '#5B69FD'},
             tooltip: { isHtml: true },
         };
 
-        function genTooltip(startDate, endDate, tagged_by, tagged) {
-            var diff = Math.round((endDate-startDate)/1000);
-            
-            var days = Math.floor(diff/(24*60*60));
-            diff = diff-(days*24*60*60);
-            var hours = Math.floor(diff/(60*60));
-            diff = diff-(hours*60*60);
-            var minutes = Math.floor(diff/(60));
-
-            return '<p>&nbsp' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + ' &nbsp<br>&nbspTagged By: ' + tagged_by + ' &nbsp<br>&nbspTagged: ' + tagged + '<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
-        }
-
         chart.draw(dataTable, options);
     }
 
     $(window).resize(function(){
-        drawChart();
+        getChartData();
     });
   </script>
 
