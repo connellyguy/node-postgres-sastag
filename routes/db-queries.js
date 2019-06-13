@@ -1,3 +1,4 @@
+let v_taggregate = '(SELECT a.it_id, a.first_name, a.last_name, a.user_name, a.image, a.number_of_its, a.time_as_it, a.time_as_it / a.number_of_its::double precision AS avg_time_as_it FROM ( SELECT d.it_id, u.first_name, u.last_name, u.user_name, u.image, count(d.it_id) AS number_of_its, sum(d.tag_diff) AS time_as_it FROM v_tagdiff d, users u WHERE d.it_id = u.id AND tag_time > (now() - $1::interval) GROUP BY d.it_id, u.first_name, u.last_name, u.user_name, u.image) a) v_taggregate';
 module.exports = {
 
     getTimeline: (req, res, next) => {
@@ -33,11 +34,14 @@ module.exports = {
         Promise.resolve()
         .then(()=> {
             if (timeframe == "all") {
-                return Promise.resolve("SELECT * FROM v_taggregate ORDER BY time_as_it LIMIT 15;");
+                return Promise.resolve({
+                    text: "SELECT * FROM " + v_taggregate + " ORDER BY time_as_it LIMIT 15;",
+                    values: ['999 years'],
+                });
             } else {
                 return Promise.resolve({
-                    text: "SELECT * FROM v_taggregate ORDER BY time_as_it LIMIT 15;",
-                    values: [],
+                    text: "SELECT * FROM " + v_taggregate + " ORDER BY time_as_it LIMIT 15;",
+                    values: [timeframe],
                 });
             }}).then((query) => {
                 db.query(query, (err, result) => {
@@ -58,11 +62,14 @@ module.exports = {
         Promise.resolve()
         .then(()=> {
             if (timeframe == "all") {
-                return Promise.resolve("SELECT * FROM v_taggregate ORDER BY avg_time_as_it LIMIT 15;");
+                return Promise.resolve({
+                    text: "SELECT * FROM " + v_taggregate + " ORDER BY avg_time_as_it LIMIT 15;",
+                    values: ['999 years'],
+                });
             } else {
                 return Promise.resolve({
-                    text: "SELECT * FROM v_taggregate ORDER BY avg_time_as_it LIMIT 15;",
-                    values: [],
+                    text: "SELECT * FROM " + v_taggregate + " ORDER BY avg_time_as_it LIMIT 15;",
+                    values: [timeframe],
                 });
             }}).then((query) => {
                 db.query(query, (err, result) => {
@@ -83,11 +90,14 @@ module.exports = {
         Promise.resolve()
         .then(()=> {
             if (timeframe == "all") {
-                return Promise.resolve("SELECT * FROM v_taggregate ORDER BY number_of_its LIMIT 15;");
+                return Promise.resolve({
+                    text: "SELECT * FROM " + v_taggregate + " ORDER BY number_of_its LIMIT 15;",
+                    values: ['999 years'],
+                });
             } else {
                 return Promise.resolve({
-                    text: "SELECT * FROM v_taggregate ORDER BY number_of_its LIMIT 15;",
-                    values: [],
+                    text: "SELECT * FROM " + v_taggregate + " ORDER BY number_of_its LIMIT 15;",
+                    values: [timeframe],
                 });
             }}).then((query) => {
                 db.query(query, (err, result) => {

@@ -12,8 +12,24 @@
           <li class="nav-item">
             <a class="nav-link active" href="#">
               <span data-feather="grid"></span>
-              Dashboard <span class="sr-only">(current)</span>
+              Dashboard
             </a>
+        </li>
+        <li class="nav-item mt-4 ml-3">
+            <form>
+                <div class="form-row mb-3">
+                    <select id="timeframeFilter" class="form-control">
+                        <option value="1 week">1 Week</option>
+                        <option value="2 weeks">2 Weeks</option>
+                        <option selected value="1 month">1 Month</option>
+                        <option value="2 months">2 Months</option>
+                        <option value="3 months">3 Months</option>
+                        <option value="6 months">6 Months</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+            </form>
+            <button id="apply_filter" class="btn btn-outline-secondary">Apply Filter</button>
           </li>
         </ul>
       </div>
@@ -64,7 +80,7 @@
                                 <tr>
                                     <th scope="col" style="width:10% !important">Rank</th>
                                     <th scope="col" style="width:55% !important">Player</th>
-                                    <th scope="col" class="text-right" style="width:35% !important">Average Time as IT</th>
+                                    <th scope="col" class="text-right" style="width:35% !important">Avg Time as IT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -145,9 +161,8 @@
                 let prev_time = new Date(); 
                 result.forEach((tag, index) => {
                     let tag_time = new Date(tag.tag_time);
+                    tag_time.setHours(tag_time.getHours() - 4)
                     if (index > 0) {
-                        tag_time.setHours(tag_time.getHours() - 4)
-
                         var dataRow = [];
                         tagger_full_name = tag.tagger_first_name + ' ' + tag.tagger_last_name;
                         tagee_full_name = tag.tagee_first_name + ' ' + tag.tagee_last_name;
@@ -193,7 +208,17 @@
         };
 
         chart.draw(dataTable, options);
+        console.log(chartData);
     }
+
+    var filterBtn = document.getElementById('apply_filter');
+    var timeframeFilter = document.getElementById('timeframeFilter');
+
+    filterBtn.addEventListener('click', function() {
+        timeFrame  = timeframeFilter.options[timeframeFilter.selectedIndex].value;
+        console.log(timeFrame);
+        getChartData();
+    });
 
     $(window).resize(function(){
         getChartData();
