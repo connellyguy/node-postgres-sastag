@@ -1,4 +1,4 @@
-let v_taggregate = '(SELECT a.it_id, a.first_name, a.last_name, a.user_name, a.image, a.number_of_its, a.time_as_it, a.time_as_it / a.number_of_its::double precision AS avg_time_as_it FROM ( SELECT d.it_id, u.first_name, u.last_name, u.user_name, u.image, count(d.it_id) AS number_of_its, sum(d.tag_diff) AS time_as_it FROM v_tagdiff d, users u WHERE d.it_id = u.id AND tag_time > (now() - $1::interval) GROUP BY d.it_id, u.first_name, u.last_name, u.user_name, u.image) a) v_taggregate';
+let v_taggregate = '(SELECT a.it_id, a.first_name, a.last_name, a.user_name, a.image, coalesce(a.number_of_its, 0) as number_of_its, coalesce(a.time_as_it, 0) as time_as_it, CASE a.number_of_its WHEN 0 THEN 0 ELSE a.time_as_it / a.number_of_its::double precision END AS avg_time_as_it FROM ( SELECT u.id as it_id, u.first_name, u.last_name, u.user_name, u.image, count(d.it_id) AS number_of_its, sum(d.tag_diff) AS time_as_it FROM users u LEFT JOIN (SELECT * FROM v_tagdiff d WHERE d.tag_time > (now() - $1::interval)) d ON d.it_id = u.id GROUP BY u.id, u.first_name, u.last_name, u.user_name, u.image) a) v_taggregate';
 module.exports = {
 
     getTimeline: (req, res, next) => {
