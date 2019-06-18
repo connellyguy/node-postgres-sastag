@@ -27,7 +27,7 @@ const port = 5000;
 // create pooled connection to database
 const db = new Pool();
 
-// connect to database
+// Test connection to database
 db.query('SELECT NOW()', (err, res) => {
     if (err) {
         console.log(err);

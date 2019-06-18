@@ -1,43 +1,51 @@
 <% include partials/header-top-half.ejs %>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo= sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+<!-- c3.js css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.1/c3.min.css" integrity="sha256-RSMIOX07BNUXyf71hwmYRrUZ8RmiBxMTpqI0GOAy0GM=" crossorigin="anonymous" />
+
 <% include partials/header-bottom-half.ejs %>
-<div class="container-fluid dash-wrapper">
-    <div class="row">
-    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-      <div class="sidebar-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">
-              <span data-feather="grid"></span>
-              Dashboard
-            </a>
-        </li>
-        <li class="nav-item mt-4 ml-3">
-            <form>
-                <div class="form-row mb-3">
-                    <select id="timeframeFilter" class="form-control">
-                        <option value="1 week">1 Week</option>
-                        <option value="2 weeks">2 Weeks</option>
-                        <option value="3 weeks">3 Weeks</option>
-                        <option value="1 month">1 Month</option>
-                        <option value="2 months">2 Months</option>
-                        <option value="3 months">3 Months</option>
-                        <option value="6 months">6 Months</option>
-                        <option selected value="all">All Time</option>
-                    </select>
-                </div>
-            </form>
-            <!--<button id="apply_filter" class="btn btn-outline-secondary">Apply Filter</button>-->
-          </li>
-        </ul>
-      </div>
+<div class="container-fluid wrapper dash-wrapper">
+    <nav class="bg-light col-sm-3 col-lg-2 sidebar" id="sidebar">
+        <div class="sidebar-sticky">
+            <div id="dismiss">
+                <a href="#"><span data-feather="arrow-left"></span></a>
+            </div>
+            <div class="sidebar-header mx-4">
+                <h3 class="text-muted">Analytics Dashboard</h3>
+            </div>
+            <ul class="nav flex-column mx-3">
+                <!--<li class="nav-item">
+                    <a class="nav-link active" href="#">
+                        <span data-feather="grid"></span>
+                        Dashboard
+                    </a>
+                </li>-->
+                <li class="nav-item mt-4 ml-3">
+                    <form>
+                        <div class="form-row mb-3">
+                            <select id="timeframeFilter" class="form-control">
+                                <option value="1 week">1 Week</option>
+                                <option value="2 weeks">2 Weeks</option>
+                                <option value="3 weeks">3 Weeks</option>
+                                <option value="1 month">1 Month</option>
+                                <option value="2 months">2 Months</option>
+                                <option value="3 months">3 Months</option>
+                                <option value="6 months">6 Months</option>
+                                <option selected value="all">All Time</option>
+                            </select>
+                        </div>
+                    </form>
+                    <!--<button id="apply_filter" class="btn btn-outline-secondary">Apply Filter</button>-->
+                  </li>
+                </ul>
+        </div>
     </nav>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <div class="row mx-sm-auto">
-	       <div id="timeline" class="chart" style="height: 520px;"/>
+    <main role="main" class="col mx-auto px-4 main">
+        <div class="row mx-sm-auto mx-lg-5">
+	       <div id="timeline" class="chart" style="height: 520px;"></div>
         </div>
         <div class="container-fluid">
             <div class="row">
@@ -90,20 +98,35 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md">
+                    <div id="longtimeChart"></div>
+                </div>
+                <div class="col-md">
+                    <div id="shortavgChart"></div>
+                </div>
+                <!--<div class="col-md">
+                    <div id="mosttagChart"></div>
+                </div>-->
+            </div>
         </div>
     </main>
+
 </div>
 </div>
+
 
 <script type="text/javascript">
 
-    var timeframeFilter = document.getElementById('timeframeFilter');
-    var timeFrame  = timeframeFilter.options[timeframeFilter.selectedIndex].value;
+    function getTimeFrame() {
+        var timeframeFilter = document.getElementById('timeframeFilter');
+        return timeframeFilter.options[timeframeFilter.selectedIndex].value;
+    }
 
     google.charts.load('current', {packages: ['corechart','timeline']});
     google.charts.setOnLoadCallback(updateAllData);
 
-    function genTooltip(startDate, endDate, tagged_by, tagged) {
+    function genTooltip(startDate, endDate, tagged_by, tagged, it) {
             var diff = Math.round((endDate-startDate)/1000);
             
             var days = Math.floor(diff/(24*60*60));
@@ -112,7 +135,7 @@
             diff = diff-(hours*60*60);
             var minutes = Math.floor(diff/(60));
 
-            return '<p>&nbsp' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + ' &nbsp<br>&nbspTagged By: ' + tagged_by + ' &nbsp<br>&nbspTagged: ' + tagged + '<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+            return '<p>&nbsp' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + ' &nbsp<br>&nbspIT: ' + it + ' &nbsp<br>&nbspTagged By: ' + tagged_by + ' &nbsp<br>&nbspTagged: ' + tagged + '<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
     }
 
     function updateAllData() {
@@ -125,7 +148,7 @@
     function getChartData() {
         var dataRows = [];
         $.ajax({
-        url: "/db/timeline/" + timeFrame,
+        url: "/db/timeline/" + getTimeFrame(),
         success: function (result) {
                 dataRows = []
                 let prev_time = new Date(); 
@@ -142,7 +165,7 @@
                         prev_tagger_full_name = tag.prev_tagger_first_name + ' ' + tag.prev_tagger_last_name;
                         dataRow.push(tagger_full_name);
                         dataRow.push(' ');
-                        dataRow.push(genTooltip(prev_time, tag_time, prev_tagger_full_name, tagee_full_name));
+                        dataRow.push(genTooltip(prev_time, tag_time, prev_tagger_full_name, tagee_full_name, tagger_full_name));
                         dataRow.push(prev_time);
                         dataRow.push(tag_time);
                         dataRows.push(dataRow);
@@ -163,7 +186,6 @@
 		var container = document.getElementById('timeline');
         var chart = new google.visualization.Timeline(container);
         var dataTable = new google.visualization.DataTable();
-        console.log(new Date());
 
         dataTable.addColumn({ type: 'string', id: 'IT' });
         dataTable.addColumn({ type: 'string', id: 'dummy bar label' });
@@ -178,19 +200,23 @@
         };
 
         chart.draw(dataTable, options);
-        console.log(chartData);
     }
 
     function getLongTimeData() {
+        let player_names = [];
+        let player_times = ['Total Time as IT'];
         $.ajax({
-        url: "/db/longtime/" + timeFrame,
+        url: "/db/longtime/" + getTimeFrame(),
         success: function (result) {
                 $("#longtimeTable").find("tr:gt(0)").remove();
+
                 result.forEach((player, index) => {
                     let it_duration = moment.duration(player.time_as_it, 'seconds');
                     var time_it_str = '';
                     let rank = index + 1;
                     let full_name = player.first_name + ' ' + player.last_name
+                    player_names.push(player.first_name);
+                    player_times.push(Math.floor(it_duration.asSeconds()));
                     if (it_duration.days() >= 2) {
                         time_it_str += it_duration.days() + ' Days, '
                     } else if (it_duration.days()) {
@@ -210,12 +236,34 @@
         error: function (err) {
             console.log('Error on ajax request');
         }
+        }).done(function() { 
+            console.log(player_names);
+            console.log(player_times);
+            var ltchart = c3.generate({
+                bindto: '#longtimeChart',
+                data: {
+                    columns: [player_times],
+                    type: 'bar',
+                },
+                bar: {
+                    width: { 
+                        ratio: 0.5
+                    },
+                },
+                axis: {
+                    x: {
+                        type: 'category',
+                        categories: player_names,
+                    },
+                },
+
+            });
         });
     }
 
     function getShortAvgData() {
         $.ajax({
-        url: "/db/shortavg/" + timeFrame,
+        url: "/db/shortavg/" + getTimeFrame(),
         success: function (result) {
                 $("#shortavgTable").find("tr:gt(0)").remove();
                 result.forEach((player, index) => {
@@ -247,7 +295,7 @@
 
     function getMostTagData() {
         $.ajax({
-        url: "/db/mosttag/" + timeFrame,
+        url: "/db/mosttag/" + getTimeFrame(),
         success: function (result) {
                 $("#mosttagTable").find("tr:gt(0)").remove();
                 result.forEach((player, index) => {
@@ -268,19 +316,50 @@
         });
     }
 
-    $(timeframeFilter.addEventListener('change', function() {
-        timeFrame  = timeframeFilter.options[timeframeFilter.selectedIndex].value;
-        console.log(timeFrame);
+    $(document.getElementById('timeframeFilter').addEventListener('change', function() {
         updateAllData();
+        dismissSidebar();
     }));
 
     $(window).resize(function(){
         updateAllData();
     });
+
+    function dismissSidebar() {
+            // hide overlay
+            $('.overlay').removeClass('active');
+            // hide sidebar
+            $('#sidebar').removeClass('active');
+    };
+
+    $(document).ready(function() {
+        $("#menu-button").removeClass('d-none');
+
+        $('#dismiss, .overlay').on('click', function () {
+            dismissSidebar();
+        });
+
+        $('#menu-button').on('click', function() {
+            // show overlay
+            $('.overlay').addClass('active');
+            // show sidebar
+            $('#sidebar').addClass('active');
+        });
+    });
+
   </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<!-- feather icons javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.21.0/feather.min.js" integrity="sha256-qBd447qJjlY5iM+wziRXC/fp1ZS/VF7b0pXn8iANAps=" crossorigin="anonymous"></script>
+
+<!-- moment.js library (used for time computations) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+
+<!-- d3.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js" integrity="sha256-k9RyZhvMj2bg0fd8L3IE41t0HpTXnivMoePN/Ksq250=" crossorigin="anonymous"></script>
+
+<!-- c3.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.1/c3.min.js" integrity="sha256-AGwhn70AFFB7EOY7Bc7X+28uV9fD7LDhE+5kkWduKW8=" crossorigin="anonymous"></script>
 <script>
     feather.replace();
 </script>

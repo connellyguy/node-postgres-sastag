@@ -1,4 +1,3 @@
-</head>
 <style>
     .table-wrapper {
         margin-top: 80px;
@@ -45,12 +44,90 @@
     .chart {
         width: 100%;
     }
+    
+    .sidebar {
+        position: fixed;
+        margin-left: -250px;
+        max-width: 250px;
+        /*opacity: 0;*/
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 9999; /* Behind the navbar */
+        /*padding: 48px 0 0; /* Height of navbar */
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        transition: all 0.5s;
+    }
+
+    .sidebar.active {
+        margin-left: 0px;
+        /*opacity: 1;*/
+    }
+
+    .sidebar-sticky {
+        position: relative;
+        top: 0;
+        height: calc(100vh - 48px);
+        padding-top: .5rem;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    }
+
+    @supports ((position: -webkit-sticky) or (position: sticky)) {
+        .sidebar-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+        }
+    }
+
+    .overlay {
+        display: block;
+        visibility: hidden;
+        position: fixed;
+        /* full screen */
+        width: 100%;
+        height: 100%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        /* transparent black */
+        background: rgba(0, 0, 0, 0.5);
+        /* middle layer, i.e. appears below the sidebar */
+        z-index: 9998;
+        opacity: 0;
+        /* animate the transition */
+        transition: all 0.5s;
+        
+    }
+
+    /* display .overlay when it has the .active class */
+    .overlay.active {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    #dismiss {
+        position: absolute;
+        /* top right corner of the sidebar */
+        top: 12px;
+        right: 10px;
+    }
 
 </style>
+</head>
 <body>
+<div class="overlay"></div>
 <div class="page-wrapper">
     <nav class="navbar navbar-light bg-light border-bottom shadow-sm fixed-top">
-        <span class="navbar-brand mb-0 h1" ><a href="/">Who's IT?</a></span>
+        <ul class="nav">
+            <li class="nav-item d-none" id="menu-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav mt-2 mr-3 feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </li>
+            <li class="nav-item">
+                <span class="navbar-brand mb-0 h1" ><a href="/">Who's IT?</a></span>
+            </li>
+        </ul>
         <ul class="nav">
             <li class="nav-item">
                 <% if (typeof user === "undefined") { %>
