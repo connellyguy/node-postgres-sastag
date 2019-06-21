@@ -45,8 +45,8 @@
 	       <div id="timeline" class="chart" style="height: 520px;"></div>
         </div>
         <div class="container-fluid">
-            <div class="row m-0 p-0">
-                <div class="col-lg" id="longtimeDiv">
+            <div class="row">
+                <div class="col-lg-6" id="longtimeDiv">
                     <div class="mb-lg-4" id="longtimeDiv">
                         <canvas id="longtimeChart"></canvas>
                     </div>
@@ -65,7 +65,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-lg">
+                <div class="col-lg-6">
                     <div class="mb-lg-4" id="shortavgDiv">
                         <canvas id="shortavgChart"></canvas>
                     </div>
@@ -86,12 +86,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg" >
+                <div class="col-md-6" >
                     <div class="container" id="mosttagDiv">
                         <canvas id="mosttagChart"></canvas>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-md-6">
                     <div class="table-responsive-md">
                         <table id="mosttagTable" class="table table-hovered table-responsive-md table-striped shadow">
                             <thead class="thead-dark">
@@ -238,51 +238,152 @@
         return outstr;
     }
 
+    function getPlayerColor(player_id, opacity) {
+        switch (player_id) {
+            case 1:
+                return 'rgb(255,171,132,' + opacity + ')';
+            break; 
+
+            case 2:
+                return 'rgb(39,40,56,' + opacity + ')';
+            break; 
+
+            case 3:
+                return 'rgb(220,117,143,' + opacity + ')';
+            break;
+
+            case 6:
+                return 'rgb(129,94,91,' + opacity + ')';
+            break;
+
+            case 7:
+                return 'rgb(70,18,32,' + opacity + ')';
+            break;
+
+            case 8:
+                return 'rgb(232,214,118,' + opacity + ')';
+            break;
+
+            case 9:
+                return 'rgb(141,181,128,' + opacity + ')';
+            break;
+
+            case 10:
+                return 'rgb(117,185,190,' + opacity + ')';
+            break;
+
+            case 11:
+                return 'rgb(4,42,43,' + opacity + ')';
+            break;
+
+            case 13:
+                return 'rgb(236,145,146,' + opacity + ')';
+            break;
+
+            case 42:
+                return 'rgb(181,189,137,' + opacity + ')';
+            break;
+
+            default:
+                return 'rgb(92,128,188,' + opacity + ')';
+        }
+    }
+
     function drawBarGraph(data_labels, data, bar_color, border_color, data_label, ctx) {
-    var myChart = new Chart(ctx, {
-        type: 'horizontalBar',
-        data: {
-            labels: data_labels,
-            datasets: [{
-                label: data_label,
-                data: data,
-                backgroundColor: bar_color,
-                borderColor: border_color,
-                borderWidth: 1,
-            }]
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                        callback: function(value, index, values) {
-                            return formatSecAsDays(value);
+        var myChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+                labels: data_labels,
+                datasets: [{
+                    label: data_label,
+                    data: data,
+                    backgroundColor: bar_color,
+                    borderColor: border_color,
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value, index, values) {
+                                return formatSecAsDays(value);
+                            },
+                        },
+                    },],
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += formatSecAsDur(tooltipItem.xLabel);
+                            return label;
                         },
                     },
-                },],
+                },
+                title: {
+                    display: true,
+                    text: data_label,
+                },
+                legend: {
+                    display: false,
+                },
             },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+        });
+    }
 
-                        if (label) {
-                            label += ': ';
-                        }
-                        label += formatSecAsDur(tooltipItem.xLabel);
-                        return label;
+    function drawPieChart(data_labels, data, bar_colors, data_label, ctx) {
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: data_labels,
+                datasets: [{
+                    label: data_label,
+                    data: data,
+                    backgroundColor: bar_color,
+                    borderColor: border_color,
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value, index, values) {
+                                return formatSecAsDays(value);
+                            },
+                        },
+                    },],
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += formatSecAsDur(tooltipItem.xLabel);
+                            return label;
+                        },
                     },
                 },
             },
-        },
-    });
+        });
     }
 
     function getLongTimeData() {
         
         var player_names = [];
         var player_times = [];
+        var player_bg_colors = [];
+        var player_border_colors = [];
         $.ajax({
         url: "/db/longtime/" + getTimeFrame(),
         success: function (result) {
@@ -296,6 +397,8 @@
                     } else {
                         player_times.push(player.time_as_it);
                     }
+                    player_bg_colors.push(getPlayerColor(player.it_id, 0.2));
+                    player_border_colors.push(getPlayerColor(player.it_id, 1));
                     var time_it_str = formatSecAsDur(player.time_as_it);
                     $("#longtimeTable tbody").append(
                         "<tr>" +
@@ -311,9 +414,9 @@
         }
         }).done(function() {
             $("canvas#longtimeChart").remove();
-            $("div#longtimeDiv").append('<canvas id="longtimeChart"></canvas>');
+            $("div#longtimeDiv").append('<canvas id="longtimeChart" style="height: 20px;"></canvas>');
             var ctx = document.getElementById('longtimeChart').getContext('2d'); 
-            drawBarGraph(player_names, player_times, 'rgba(255, 99, 132, 0.2)', 'rgba(255, 99, 132, 0.2)', 'Total Time Tagged', ctx);
+            drawBarGraph(player_names, player_times, player_bg_colors, player_border_colors, 'Total Time Tagged', ctx);
         });
     }
 
@@ -321,6 +424,8 @@
 
         var player_names = [];
         var player_times = [];
+        var player_bg_colors = [];
+        var player_border_colors = [];
         $.ajax({
         url: "/db/shortavg/" + getTimeFrame(),
         success: function (result) {
@@ -334,6 +439,8 @@
                     } else {
                         player_times.push(player.avg_time_as_it);
                     }
+                    player_bg_colors.push(getPlayerColor(player.it_id, 0.2));
+                    player_border_colors.push(getPlayerColor(player.it_id, 1));
                     var time_it_str = formatSecAsDur(player.avg_time_as_it);
                     $("#shortavgTable tbody").append(
                         "<tr>" +
@@ -349,20 +456,29 @@
         }
         }).done(function() { 
             $("canvas#shortavgChart").remove();
-            $("div#shortavgDiv").append('<canvas id="shortavgChart"></canvas>');
+            $("div#shortavgDiv").append('<canvas id="shortavgChart" style="height: 20px;"></canvas>');
             var ctx = document.getElementById('shortavgChart').getContext('2d');
-            drawBarGraph(player_names, player_times, 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)', 'Average Time as IT', ctx);
+            drawBarGraph(player_names, player_times, player_bg_colors, player_border_colors, 'Average Time as IT', ctx);
         });
     }
 
     function getMostTagData() {
+
+        var player_names = [];
+        var player_totals = [];
+        var player_colors = [];
         $.ajax({
         url: "/db/mosttag/" + getTimeFrame(),
         success: function (result) {
                 $("#mosttagTable").find("tr:gt(0)").remove();
                 result.forEach((player, index) => {
                     let rank = index + 1;
-                    let full_name = player.first_name + ' ' + player.last_name
+                    let full_name = player.first_name + ' ' + player.last_name;
+                    player_names.push(full_name);
+                    player_totals.push(Math.round(player.number_of_its));
+                    player_colors.push(getPlayerColor(player.it_id, 1));
+                    console.log(player_names);
+                    console.log(player_colors);
                     $("#mosttagTable tbody").append(
                           "<tr>" +
                             "<td>" + rank + "</td>" +
@@ -375,6 +491,30 @@
         error: function (err) {
             console.log('Error on ajax request');
         }
+        }).done(function() { 
+            $("canvas#mosttagChart").remove();
+            $("div#mosttagDiv").append('<canvas id="mosttagChart" style="height: 20px;"></canvas>');
+            var ctx = document.getElementById('mosttagChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: player_names,
+                    datasets: [{
+                        label: "Number of Times Tagged",
+                        data: player_totals,
+                        backgroundColor: player_colors,
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Number of Times Tagged',
+                    }
+                },
+            });
         });
     }
 
