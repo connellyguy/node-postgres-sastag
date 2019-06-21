@@ -342,45 +342,27 @@
         });
     }
 
-    function drawPieChart(data_labels, data, bar_colors, data_label, ctx) {
+    function drawDoughnutChart(data_labels, data, segment_color, data_label, ctx) {
         var myChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: data_labels,
-                datasets: [{
-                    label: data_label,
-                    data: data,
-                    backgroundColor: bar_color,
-                    borderColor: border_color,
-                    borderWidth: 2,
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            callback: function(value, index, values) {
-                                return formatSecAsDays(value);
-                            },
-                        },
-                    },],
+                type: 'doughnut',
+                data: {
+                    labels: data_labels,
+                    datasets: [{
+                        label: data_label,
+                        data: data,
+                        backgroundColor: segment_color,
+                    }]
                 },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-                            if (label) {
-                                label += ': ';
-                            }
-                            label += formatSecAsDur(tooltipItem.xLabel);
-                            return label;
-                        },
+                options: {
+                    legend: {
+                        display: false,
                     },
+                    title: {
+                        display: true,
+                        text: data_label,
+                    }
                 },
-            },
-        });
+            });
     }
 
     function getLongTimeData() {
@@ -405,7 +387,7 @@
                     } else {
                         player_times.push(player.time_as_it);
                     }
-                    player_bg_colors.push(getPlayerColor(player.it_id, 0.2));
+                    player_bg_colors.push(getPlayerColor(player.it_id, 0.4));
                     player_border_colors.push(getPlayerColor(player.it_id, 1));
                     var time_it_str = formatSecAsDur(player.time_as_it);
                     $("#longtimeTable tbody").append(
@@ -450,7 +432,7 @@
                     } else {
                         player_times.push(player.avg_time_as_it);
                     }
-                    player_bg_colors.push(getPlayerColor(player.it_id, 0.2));
+                    player_bg_colors.push(getPlayerColor(player.it_id, 0.4));
                     player_border_colors.push(getPlayerColor(player.it_id, 1));
                     var time_it_str = formatSecAsDur(player.avg_time_as_it);
                     $("#shortavgTable tbody").append(
@@ -469,8 +451,6 @@
             $("#shortavgDiv").empty();
             $("div#shortavgDiv").append('<canvas id="shortavgChart" style="height: 20px;"></canvas>');
             var ctx = document.getElementById('shortavgChart').getContext('2d');
-            player_bg_colors.push(getPlayerColor(-1,0.2));
-            player_border_colors.push(getPlayerColor(-1,1));
             drawBarGraph(player_names, player_times, player_bg_colors, player_border_colors, 'Average Time as IT', ctx);
         });
     }
@@ -511,26 +491,7 @@
             $("#mosttagDiv").empty();
             $("div#mosttagDiv").append('<canvas id="mosttagChart" style="height: 20px;"></canvas>');
             var ctx = document.getElementById('mosttagChart').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: player_names,
-                    datasets: [{
-                        label: "Number of Times Tagged",
-                        data: player_totals,
-                        backgroundColor: player_colors,
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false,
-                    },
-                    title: {
-                        display: true,
-                        text: 'Number of Times Tagged',
-                    }
-                },
-            });
+            drawDoughnutChart(player_names, player_totals, player_colors, 'Number of Times Tagged', ctx)
         });
     }
 
