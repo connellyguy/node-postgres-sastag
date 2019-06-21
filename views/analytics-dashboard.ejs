@@ -1,10 +1,7 @@
 <% include partials/header-top-half.ejs %>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo= sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-<!-- c3.js css -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.1/c3.min.css" integrity="sha256-RSMIOX07BNUXyf71hwmYRrUZ8RmiBxMTpqI0GOAy0GM=" crossorigin="anonymous" />
+<!-- chart.js stylesheet -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
 
 <% include partials/header-bottom-half.ejs %>
 <div class="container-fluid wrapper dash-wrapper">
@@ -100,10 +97,10 @@
             </div>
             <div class="row">
                 <div class="col-md">
-                    <div id="longtimeChart"></div>
+                    <canvas id="longtimeChart"></canvas>
                 </div>
                 <div class="col-md">
-                    <div id="shortavgChart"></div>
+                    <canvas id="shortavgChart"></canvas>
                 </div>
                 <!--<div class="col-md">
                     <div id="mosttagChart"></div>
@@ -114,6 +111,13 @@
 
 </div>
 </div>
+
+<!-- Google Charts js files -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo= sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<!-- Chart.js files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
 
 
 <script type="text/javascript">
@@ -135,7 +139,7 @@
             diff = diff-(hours*60*60);
             var minutes = Math.floor(diff/(60));
 
-            return '<p>&nbsp' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + ' &nbsp<br>&nbspIT: ' + it + ' &nbsp<br>&nbspTagged By: ' + tagged_by + ' &nbsp<br>&nbspTagged: ' + tagged + '<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+            return '<div style="padding:5px 5px 5px 5px; width: 220px;"><div style="font-size:120%">' + (days > 0 ? days + ' Day' + (days !== 1 ? 's, ':', ') : '') + (hours > 0 ? hours + ' Hour' + (hours !== 1 ? 's, ':', ') : '') + minutes + ' Minute' + (minutes !== 1 ? 's':'') + '</div><b>IT:</b> ' + it + '<br><b>Tagged By:</b> ' + tagged_by + ' <br><b>Tagged:</b> ' + tagged + '<br></div>';
     }
 
     function updateAllData() {
@@ -202,28 +206,41 @@
         chart.draw(dataTable, options);
     }
 
+    function formatSecAsDur(secondsIn) {
+        let duration = moment.duration(secondsIn, 'seconds');
+        outstr = '';
+        if (duration.days() >= 2) {
+            outstr += duration.days() + ' Days, '
+        } else if (duration.days()) {
+            outstr += duration.days() + ' Day, '
+        }
+        duration.subtract(duration.days(),'d');
+        outstr += moment().startOf('day').seconds(duration.asSeconds()).format('HH:mm:ss');
+        return outstr;
+    }
+
+    function formatSecAsDays(secondsIn) {
+        let duration = moment.duration(secondsIn, 'seconds');
+        outstr = '';
+        if (duration.days() >= 2) {
+            outstr += duration.days() + ' Days'
+        } else if (duration.days()) {
+            outstr += duration.days() + ' Day'
+        } else {
+            outstr += '0 Days'
+        }
+        return outstr;
+    }
+
     function getLongTimeData() {
-        let player_names = [];
-        let player_times = ['Total Time as IT'];
         $.ajax({
         url: "/db/longtime/" + getTimeFrame(),
         success: function (result) {
                 $("#longtimeTable").find("tr:gt(0)").remove();
-
                 result.forEach((player, index) => {
-                    let it_duration = moment.duration(player.time_as_it, 'seconds');
-                    var time_it_str = '';
                     let rank = index + 1;
                     let full_name = player.first_name + ' ' + player.last_name
-                    player_names.push(player.first_name);
-                    player_times.push(Math.floor(it_duration.asSeconds()));
-                    if (it_duration.days() >= 2) {
-                        time_it_str += it_duration.days() + ' Days, '
-                    } else if (it_duration.days()) {
-                        time_it_str += it_duration.days() + ' Day, '
-                    }
-                    it_duration.subtract(it_duration.days(),'d');
-                    time_it_str += moment().startOf('day').seconds(it_duration.asSeconds()).format('HH:mm:ss');
+                    var time_it_str = formatSecAsDur(player.time_as_it);
                     $("#longtimeTable tbody").append(
                         "<tr>" +
                             "<td>" + rank + "</td>" +
@@ -236,28 +253,6 @@
         error: function (err) {
             console.log('Error on ajax request');
         }
-        }).done(function() { 
-            console.log(player_names);
-            console.log(player_times);
-            var ltchart = c3.generate({
-                bindto: '#longtimeChart',
-                data: {
-                    columns: [player_times],
-                    type: 'bar',
-                },
-                bar: {
-                    width: { 
-                        ratio: 0.5
-                    },
-                },
-                axis: {
-                    x: {
-                        type: 'category',
-                        categories: player_names,
-                    },
-                },
-
-            });
         });
     }
 
@@ -355,12 +350,13 @@
 <!-- moment.js library (used for time computations) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
 
-<!-- d3.js library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js" integrity="sha256-k9RyZhvMj2bg0fd8L3IE41t0HpTXnivMoePN/Ksq250=" crossorigin="anonymous"></script>
-
-<!-- c3.js library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.1/c3.min.js" integrity="sha256-AGwhn70AFFB7EOY7Bc7X+28uV9fD7LDhE+5kkWduKW8=" crossorigin="anonymous"></script>
 <script>
+    // Initialize moment.js
+    moment().format();
+</script>
+
+<script> 
+    // Replace feather icons
     feather.replace();
 </script>
 
