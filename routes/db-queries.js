@@ -109,4 +109,15 @@ module.exports = {
                 })
         }).catch(() => {return next(createError(500))});
     },
+
+    getPlayers: (req, res, next) => {
+        let query = 'SELECT * from users order by id;';
+        db.query(query, (err, result) => {
+            if (err) {
+                return next(createError(500,err));
+            } else {
+                return res.json(result.rows);
+            }
+        });
+    }
 }

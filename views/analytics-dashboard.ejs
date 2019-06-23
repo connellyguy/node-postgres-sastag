@@ -1,5 +1,11 @@
 <% include partials/header-top-half.ejs %>
 
+<!-- Analytics stylesheet -->
+<link rel="stylesheet" href="/css/analytics.css"/>
+
+<!-- Sidebar stylesheet -->
+<link rel="stylesheet" href="/css/analytics-sidebar.css"/>
+
 <!-- chart.js stylesheet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
 
@@ -13,14 +19,14 @@
             <div class="sidebar-header mx-4">
                 <h3 class="text-muted">Analytics Dashboard</h3>
             </div>
-            <ul class="nav flex-column mx-3">
+            <ul class="nav flex-column">
                 <!--<li class="nav-item">
                     <a class="nav-link active" href="#">
                         <span data-feather="grid"></span>
                         Dashboard
                     </a>
                 </li>-->
-                <li class="nav-item mt-4 ml-3">
+                <li class="nav-item mt-4 mx-3">
                     <form>
                         <div class="form-row mb-3">
                             <select id="timeframeFilter" class="form-control">
@@ -36,13 +42,24 @@
                         </div>
                     </form>
                     <!--<button id="apply_filter" class="btn btn-outline-secondary">Apply Filter</button>-->
-                  </li>
-                </ul>
+                </li>
+                <li class="nav-item">
+                    <div class="sidebar-accordion">
+                        <a class="nav-link" data-toggle="collapse" href="#playersCard" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <span data-feather="plus-square" id="players-plus"></span><span data-feather="minus-square" class="d-none" id="players-minus"></span> Players
+                        </a>
+                        <div class="collapse navbar-collapse" id="playersCard">
+                            <ul class="ml-5 nav nav-sublist" id="nav-players-list">
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </nav>
     <main role="main" class="col mx-auto px-4 main">
         <div class="row mx-sm-auto mx-lg-5">
-            <div id="timeline" class="chart chart-holder" style="height: 520px;"></div>
+            <div id="timeline" class="fullwidth-chart chart-holder" style="height: 520px;"></div>
         </div>
             <div class="row">
                 <div class="col-lg-6">
@@ -234,11 +251,11 @@
         } else if (duration.days()) {
             outstr += duration.days() + ' Day'
         } else {
-            outstr += '0 Days'
+            outstr += '0'
         }
-        if (duration.days() < 2 && duration.hours() > 0) {
+        if (duration.days() < 1 && duration.hours() > 0) {
             duration.subtract(duration.days(),'d');
-            outstr += ', ' + duration.hours() + ' Hrs';
+            outstr = duration.hours() + ' Hrs';
         }
         return outstr;
     }
@@ -473,8 +490,6 @@
                     player_names.push(full_name);
                     player_totals.push(Math.round(player.number_of_its));
                     player_colors.push(getPlayerColor(player.it_id, 1));
-                    console.log(player_names);
-                    console.log(player_colors);
                     $("#mosttagTable tbody").append(
                           "<tr>" +
                             "<td>" + rank + "</td>" +
@@ -504,29 +519,9 @@
         getChartData();
     });
 
-    function dismissSidebar() {
-            // hide overlay
-            $('.overlay').removeClass('active');
-            // hide sidebar
-            $('#sidebar').removeClass('active');
-    };
+</script>
 
-    $(document).ready(function() {
-        $("#menu-button").removeClass('d-none');
-
-        $('#dismiss, .overlay').on('click', function () {
-            dismissSidebar();
-        });
-
-        $('#menu-button').on('click', function() {
-            // show overlay
-            $('.overlay').addClass('active');
-            // show sidebar
-            $('#sidebar').addClass('active');
-        });
-    });
-
-  </script>
+<script src="/javascripts/analytics-sidebar.js"></script>
 
 <!-- feather icons javascript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.21.0/feather.min.js" integrity="sha256-qBd447qJjlY5iM+wziRXC/fp1ZS/VF7b0pXn8iANAps=" crossorigin="anonymous"></script>
