@@ -21,7 +21,7 @@ function dismissSidebar() {
     $('.overlay').removeClass('active');
     // hide sidebar
     $('#sidebar').removeClass('active');
-};
+}
 
 $(document).ready(function() {
     navPlayerList();
@@ -48,4 +48,8 @@ $(document).ready(function() {
         $('#players-minus').addClass('d-none');
         $('#players-plus').removeClass('d-none');
     })
-});
+})
+
+$(document.getElementById('timeframeFilter').addEventListener('change', function() {
+    dismissSidebar();
+}))

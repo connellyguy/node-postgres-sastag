@@ -2,6 +2,7 @@
 ##############################
 .env
 public/assets/img/*
+okta_notes.txt
 
 # Node modules #
 ###################
