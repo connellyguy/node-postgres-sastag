@@ -11,7 +11,7 @@
 
 <% include partials/header-bottom-half.ejs %>
 <div class="container-fluid wrapper dash-wrapper">
-    <nav class="bg-light col-sm-3 col-lg-2 sidebar" id="sidebar">
+    <nav class="px-0 bg-light col-sm-3 col-lg-2 sidebar" id="sidebar">
         <div class="sidebar-sticky">
             <div id="dismiss">
                 <a href="#"><span data-feather="arrow-left"></span></a>
@@ -49,7 +49,7 @@
                             <span data-feather="plus-square" id="players-plus"></span><span data-feather="minus-square" class="d-none" id="players-minus"></span> Players
                         </a>
                         <div class="collapse navbar-collapse" id="playersCard">
-                            <ul class="ml-5 nav nav-sublist" id="nav-players-list">
+                            <ul class="ml-5 py-1 nav nav-sublist" id="nav-players-list">
                             </ul>
                         </div>
                     </div>
@@ -138,6 +138,12 @@
 <!-- Chart.js files -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
 
+<!-- feather icons javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.21.0/feather.min.js" integrity="sha256-qBd447qJjlY5iM+wziRXC/fp1ZS/VF7b0pXn8iANAps=" crossorigin="anonymous"></script>
+
+<!-- moment.js library (used for time computations) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+
 <!-- General Analytics functions -->
 <script src="/javascripts/analytics.js"></script>
 
@@ -146,21 +152,5 @@
 
 <!-- Dashboard-specific javascript -->
 <script src="/javascripts/analytics-dashboard.js"></script>
-
-<!-- feather icons javascript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.21.0/feather.min.js" integrity="sha256-qBd447qJjlY5iM+wziRXC/fp1ZS/VF7b0pXn8iANAps=" crossorigin="anonymous"></script>
-
-<!-- moment.js library (used for time computations) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
-
-<script>
-    // Initialize moment.js
-    moment().format();
-</script>
-
-<script> 
-    // Replace feather icons
-    feather.replace();
-</script>
 
 <% include partials/footer.ejs%>

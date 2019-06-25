@@ -13,7 +13,7 @@ module.exports = {
     },
 
     getPlayerCharts: (req, res) => {
-        let playerId = req.params.id;
+        var playerId = req.params.id;
         let query = {
             text: "SELECT * FROM v_players WHERE id = $1 ",
             values: [playerId]
@@ -26,12 +26,14 @@ module.exports = {
                     res.render('player-charts.ejs', {
                         title: 'Welcome to SAS Tag | Charts',
                         player: result.rows[0],
+                        playerId: playerId,
                         user: req.userContext.userinfo,
                     });
                 } else {
                     res.render('player-charts.ejs', {
                         title: 'Welcome to SAS Tag | Charts',
                         player: result.rows[0],
+                        playerId: playerId,
                     });
                 }
             }

@@ -4,7 +4,7 @@ function navPlayerList() {
     success: function (result) {
             result.forEach((player, index) => {
                 $("#nav-players-list").append(
-                    '<li><a href="/charts/player/' + player.id + '" class="nav-sublink">' + player.first_name + ' ' + player.last_name + '</a></li>'
+                    '<li class="my-1"><a href="/charts/player/' + player.id + '" class="nav-sublink">' + player.first_name + ' ' + player.last_name + '</a></li>'
                 );
             });
         },

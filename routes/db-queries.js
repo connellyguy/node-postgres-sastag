@@ -119,5 +119,31 @@ module.exports = {
                 return res.json(result.rows);
             }
         });
+    },
+
+    getTags: (req, res, next) => {
+        let playerId = req.params.id;
+        let timeframe = req.params.timeframe;
+        Promise.resolve()
+        .then(()=> {
+            if (timeframe == "all") {
+                return Promise.resolve({
+                    text: "SELECT * FROM v_tagdiff where it_id = $1 ORDER BY tag_time ASC;",
+                    values: [playerId],
+                });
+            } else {
+                return Promise.resolve({
+                    text: "SELECT * FROM v_tagdiff where it_id = $1 AND tag_time > (now() - $2::interval) ORDER BY tag_time ASC;",
+                    values: [playerId,timeframe],
+                });
+            }}).then((query) => {
+                db.query(query, (err, result) => {
+                    if (err) {
+                        return next(createError(500,err));
+                    } else { 
+                        return res.json(result.rows); 
+                    }
+                })
+        }).catch(() => {return next(createError(500))});
     }
 }
