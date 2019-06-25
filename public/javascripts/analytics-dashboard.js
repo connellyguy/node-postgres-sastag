@@ -14,10 +14,40 @@ function genTooltip(startDate, endDate, tagged_by, tagged, it) {
 }
 
 function updateAllData() {
-    getChartData();
-    getLongTimeData();
-    getShortAvgData();
-    getMostTagData();
+    Promise.resolve()
+        .then(()=> {initializeDetailTable()})
+        .then(() => {
+            getChartData();
+            getLongTimeData();
+            getShortAvgData();
+            getMostTagData();
+        });
+}
+
+function initializeDetailTable() {
+    $.ajax({
+    url: "/db/players/",
+    success: function (result) {
+            $("#detailTable").find("tr:gt(0)").remove();
+            result.forEach((player, index) => {
+                let full_name = player.first_name + ' ' + player.last_name;
+                $("#detailTable").append(
+                    '<tr id=player' + player.id + 'Row>' +
+                        '<td>' + player.id + '</td>' +
+                        '<td>' + full_name + '</td>' +
+                        '<td id=player' + player.id + 'TotTime class="text-right">' + '-' + '</td>' +
+                        '<td id=player' + player.id + 'AvgTime class="text-right">' + '-' + '</td>' +
+                        '<td id=player' + player.id + 'Tags class="text-right">' + '-' + '</td>' +
+                    '</tr>'
+                );
+            });
+        },
+    error: function (err) {
+        console.log('Error on ajax request');
+    }
+    }).done(function() { 
+
+    });
 }
 
 function getChartData() {
@@ -87,13 +117,14 @@ function getLongTimeData() {
                 player_bg_colors.push(getPlayerColor(player.it_id, 0.4));
                 player_border_colors.push(getPlayerColor(player.it_id, 1));
                 var time_it_str = formatSecAsDur(player.time_as_it);
-                $("#longtimeTable tbody").append(
+                $('#player' + player.it_id + 'TotTime').html(time_it_str);
+                /*$("#longtimeTable tbody").append(
                     "<tr>" +
                         "<td>" + rank + "</td>" +
                         "<td>" + full_name + "</td>" +
                         "<td class='text-right'>" + time_it_str + "</td>" +
                     "</tr>"
-                );
+                );*/
             });
         },
     error: function (err) {
@@ -132,13 +163,14 @@ function getShortAvgData() {
                 player_bg_colors.push(getPlayerColor(player.it_id, 0.4));
                 player_border_colors.push(getPlayerColor(player.it_id, 1));
                 var time_it_str = formatSecAsDur(player.avg_time_as_it);
-                $("#shortavgTable tbody").append(
+                $('#player' + player.it_id + 'AvgTime').html(time_it_str);
+                /*$("#shortavgTable tbody").append(
                     "<tr>" +
                         "<td>" + rank + "</td>" +
                         "<td>" + full_name + "</td>" +
                         "<td class='text-right'>" + time_it_str + "</td>" +
                     "</tr>"
-                );
+                );*/
             });
                 },
     error: function (err) {
@@ -170,13 +202,14 @@ function getMostTagData() {
                 player_names.push(full_name);
                 player_totals.push(Math.round(player.number_of_its));
                 player_colors.push(getPlayerColor(player.it_id, 1));
-                $("#mosttagTable tbody").append(
+                $('#player' + player.it_id + 'Tags').html(Math.round(player.number_of_its));
+                /*$("#mosttagTable tbody").append(
                       "<tr>" +
                         "<td>" + rank + "</td>" +
                         "<td>" + full_name + "</td>" +
                         "<td class='text-right'>" + Math.round(player.number_of_its) + "</td>" +
                       "</tr>"
-                );
+                );*/
             });
         },
     error: function (err) {

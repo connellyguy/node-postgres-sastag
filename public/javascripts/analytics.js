@@ -134,7 +134,14 @@ function drawBarGraph(data_labels, data, bar_color, border_color, data_label, ct
                             return formatSecAsDays(value);
                         },
                     },
-                },],
+                }],
+                yAxes: [{
+                    gridLines: {
+                        display: true,
+                        drawBorder: true,
+                        drawOnChartArea: false,
+                    },
+                }]
             },
             tooltips: {
                 callbacks: {

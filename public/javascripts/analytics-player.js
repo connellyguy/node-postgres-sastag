@@ -22,7 +22,7 @@ function getPlayerLineData() {
     var dates = [];
     var totals = [];
     var total = 0;
-    var tags = 10
+    var tags = 0
     var avg = [];
     $.ajax({
     url: "/db/player/" + PLAYERID + "/" + getTimeFrame(),
@@ -61,7 +61,6 @@ function drawPlayerLineGraph(dates, dataTotal, dataAvg, lineColorTotal, fillColo
 			showLine: true,
 			data: dataTotal,
 			lineTension: 0,
-			yAxisID: 'A',
 			borderColor: lineColorTotal,
 			backgroundColor: fillColorTotal,
 			borderWidth: 1,
@@ -72,7 +71,6 @@ function drawPlayerLineGraph(dates, dataTotal, dataAvg, lineColorTotal, fillColo
 			showLine: true,
 			data: dataAvg,
 			lineTension: 0,
-			yAxisID: 'A',
 			borderColor: lineColorAvg,
 			backgroundColor: fillColorAvg,
 			borderDash: [15,5],
@@ -98,39 +96,12 @@ function drawPlayerLineGraph(dates, dataTotal, dataAvg, lineColorTotal, fillColo
                         return index % 2 === 0 ? formatSecAsDur(value) : '';
                 	},
                 },
-                scaleLabel: {
-                	labelString: labelTotal,
-                	fontSize: 16,
-                	padding: 5,
-                	display: true,
-            	},
             	gridLines: {
 					display: true,
 					drawBorder: true,
 					drawOnChartArea: false,
 				},
-			}, /*{
-				id: 'B',
-				type: 'linear',
-				position: 'right',
-				ticks: {
-                    beginAtZero: true,
-                    callback: function(value, index, values) {
-                        return index % 2 === 0 ? formatSecAsDur(value) : '';
-                	},
-            	},
-            	scaleLabel: {
-                	labelString: labelAvg,
-                	fontSize: 16,
-                	padding: 5,
-                	display: true,
-            	},
-            	gridLines: {
-					display: true,
-					drawBorder: true,
-					drawOnChartArea: false,
-				},
-			}*/],	
+			}],	
 		},
 		tooltips: {
             callbacks: {
