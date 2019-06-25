@@ -1,7 +1,7 @@
 module.exports = {
     getHomePage: (req, res, next) => {
         const query = "SELECT * FROM v_last_tag"; // query database to get last tag info
-        const hist_query = "SELECT * FROM v_tag_history ORDER BY tag_id DESC LIMIT 10";
+        const hist_query = "SELECT * FROM v_tag_history WHERE tag_id < (SELECT max(tag_id) from v_tag_history) ORDER BY tag_id DESC LIMIT 10";
 
         // execute query
         db.query(query, (err, result) => {

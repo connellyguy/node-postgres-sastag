@@ -1,0 +1,104 @@
+.sidebar {
+    position: fixed;
+    font-size: 1rem;
+    margin-left: -250px;
+    max-width: 250px;
+    /*opacity: 0;*/
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999; /* Behind the navbar */
+    /*padding: 48px 0 0; /* Height of navbar */
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    transition: all 0.5s;
+}
+
+.sidebar.active {
+    margin-left: 0px;
+    /*opacity: 1;*/
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+}
+
+.sidebar .nav-sublink {
+    color: #333;
+    display: block;
+}
+
+.sidebar .nav-sublist {
+    display: block;
+}
+
+.sidebar .navbar-collapse {
+    background-color: rgb(234,237,240);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
+}
+
+.sidebar .sidebar-accordion {
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.sidebar .nav-link .feather {
+    margin-right: 4px;
+    height: 18px;
+    color: #999;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+    color: inherit;
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: 100vh;
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+    .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}
+
+.overlay {
+    display: block;
+    visibility: hidden;
+    position: fixed;
+    /* full screen */
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* transparent black */
+    background: rgba(0, 0, 0, 0.5);
+    /* middle layer, i.e. appears below the sidebar */
+    z-index: 9998;
+    opacity: 0;
+    /* animate the transition */
+    transition: all 0.5s;
+    
+}
+
+/* display .overlay when it has the .active class */
+.overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+#dismiss {
+    position: absolute;
+    /* top right corner of the sidebar */
+    top: 12px;
+    right: 10px;
+}

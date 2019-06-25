@@ -10,20 +10,24 @@ const path = require('path');
 const app = express();
 const createError = require('http-errors');
 global.createError = createError;
+const moment = require('moment');
+moment().format();
+global.moment = moment;
 const okta = require("@okta/okta-sdk-nodejs");
 const ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
 const {getHomePage} = require('./routes/index');
 const {getPlayerList} = require('./routes/player-list');
 const {getTagPage, tagPlayer} = require('./routes/tag');
 const {addPlayerPage, addPlayer, deletePlayer, editPlayer, editPlayerPage} = require('./routes/player-management');
-const {getDashboard} = require('./routes/analytics-dashboard');
+const {getDashboard, getPlayerCharts} = require('./routes/analytics-pages');
+const {getTimeline, getLongTime, getShortAvg, getMostTag, getPlayers, getTags} = require('./routes/db-queries');
 const port = 5000;
 
 
 // create pooled connection to database
 const db = new Pool();
 
-// connect to database
+// Test connection to database
 db.query('SELECT NOW()', (err, res) => {
     if (err) {
         console.log(err);
@@ -151,7 +155,14 @@ app.get('/players/add', loginRequired, addPlayerPage);
 app.get('/players/edit/:id', isPlayerCurrentId, editPlayerPage);
 // app.get('/players/delete/:id', deletePlayer);
 app.get('/tag', isPlayerIt, getTagPage);
+app.get('/db/timeline/:timeframe', getTimeline);
+app.get('/db/longtime/:timeframe', getLongTime);
+app.get('/db/shortavg/:timeframe', getShortAvg);
+app.get('/db/mosttag/:timeframe', getMostTag);
+app.get('/db/players', getPlayers);
 app.get('/charts', getDashboard);
+app.get('/charts/player/:id', getPlayerCharts);
+app.get('/db/player/:id/:timeframe', getTags);
 app.post('/tag/:id', isPlayerIt, tagPlayer);
 app.post('/players/add', loginRequired, addPlayer);
 app.post('/players/edit/:id', isPlayerCurrentId, editPlayer);

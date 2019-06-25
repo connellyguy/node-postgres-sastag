@@ -1,0 +1,15 @@
+.fullwidth-chart {
+    width: 100%;
+}
+
+.chart-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    min-width: 400px;
+}
+
+.dash-wrapper {
+    margin-top: 80px;
+}
