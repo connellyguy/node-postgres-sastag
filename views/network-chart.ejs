@@ -3,57 +3,8 @@
 <!-- Analytics stylesheet -->
 <link rel="stylesheet" href="/css/analytics.css"/>
 
-<!-- Analytics Sidebar stylesheet -->
-<link rel="stylesheet" href="/css/analytics-sidebar.css"/>
-
 <% include partials/header-bottom-half.ejs %>
 <div class="container-fluid wrapper dash-wrapper">
-    <nav class="px-0 bg-light col-sm-3 col-lg-2 sidebar" id="sidebar">
-        <div class="sidebar-sticky">
-            <div id="dismiss">
-                <a href="#"><span data-feather="arrow-left"></span></a>
-            </div>
-            <div class="sidebar-header mx-4">
-                <h3 class="text-muted">Analytics Dashboard</h3>
-            </div>
-            <ul class="nav flex-column">
-                <li class="nav-item mt-4 mx-3">
-                    <form>
-                        <div class="form-row mb-3">
-                            <select id="timeframeFilter" class="form-control">
-                                <option value="1 week">1 Week</option>
-                                <option value="2 weeks">2 Weeks</option>
-                                <option value="3 weeks">3 Weeks</option>
-                                <option value="1 month">1 Month</option>
-                                <option value="2 months">2 Months</option>
-                                <option value="3 months">3 Months</option>
-                                <option value="6 months">6 Months</option>
-                                <option selected value="all">All Time</option>
-                            </select>
-                        </div>
-                    </form>
-                    <!--<button id="apply_filter" class="btn btn-outline-secondary">Apply Filter</button>-->
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/charts">
-                        <span data-feather="grid"></span>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <div class="sidebar-accordion">
-                        <a class="nav-link" data-toggle="collapse" href="#playersCard" role="button" aria-expanded="false" aria-controls="collapseExample">
-                            <span data-feather="plus-square" id="players-plus"></span><span data-feather="minus-square" class="d-none" id="players-minus"></span> Players
-                        </a>
-                        <div class="collapse navbar-collapse" id="playersCard">
-                            <ul class="ml-5 py-1 nav nav-sublist" id="nav-players-list">
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
     <main role="main" class="col mx-auto px-4 main">
         <div class="row"> <h1 class="display-4">Network Diagram - <span id="timeframeHeader"></span></h1></div>
         <div class="row">
@@ -76,15 +27,10 @@
 
 <!-- Sigma.js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/sigma.min.js" integrity="sha256-ii2D7w2jthCadZtIl2OjRn2vu1iEtGWcOrmd+UOZorc=" crossorigin="anonymous"></script>
-
-<!-- feather icons javascript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.21.0/feather.min.js" integrity="sha256-qBd447qJjlY5iM+wziRXC/fp1ZS/VF7b0pXn8iANAps=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.1/plugins/sigma.renderers.parallelEdges.min.js" integrity="sha256-3A1OpBDSMZdklan71IOCv8Nz86Zggi0MayBFIh5JpcE=" crossorigin="anonymous"></script>
 
 <!-- General Analytics functions -->
 <script src="/javascripts/analytics.js"></script>
-
-<!-- Analytics Sidebar javascript -->
-<script src="/javascripts/analytics-sidebar.js"></script>
 
 <!-- Network Chart javascript -->
 <script src="/javascripts/analytics-network.js"></script>

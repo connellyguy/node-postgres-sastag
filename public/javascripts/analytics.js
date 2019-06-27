@@ -195,5 +195,6 @@ function drawDoughnutChart(data_labels, data, segment_color, data_label, ctx) {
 // Initialize moment.js
 moment().format();
 
-// Replace feather icons
-feather.replace();
+$(document).ready(function() {
+    $("#timeframeFilter").removeClass('d-none');
+})

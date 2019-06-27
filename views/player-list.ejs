@@ -18,6 +18,7 @@
                             <% if (typeof user != 'undefined' && (user.preferred_username == player.email_address || user.preferred_username == process.env.ADMIN_EMAIL)) { %>
                             <a href="/players/edit/<%= player.id %>" class="btn btn-sm btn-success">Edit</a>
                             <% } %>
+                            <a href="/charts/player/<%= player.id %>" class="btn btn-sm btn-primary">View Data</a>
                             </td>
                         </tr>
                     <% }); %>

@@ -78,3 +78,55 @@
             </li>
         </ul>
     </nav>
+    <nav class="px-0 bg-light col-sm-3 col-lg-2 sidebar" id="sidebar">
+        <div class="sidebar-sticky">
+            <div id="dismiss">
+                <a href="#"><span data-feather="arrow-left"></span></a>
+            </div>
+            <div class="sidebar-header mx-4">
+                <h3 class="text-muted">Analytics Dashboard</h3>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item mt-4 mx-3">
+                    <form>
+                        <div class="form-row mb-3">
+                            <select id="timeframeFilter" class="form-control d-none">
+                                <option value="1 week">1 Week</option>
+                                <option value="2 weeks">2 Weeks</option>
+                                <option value="3 weeks">3 Weeks</option>
+                                <option value="1 month">1 Month</option>
+                                <option value="2 months">2 Months</option>
+                                <option value="3 months">3 Months</option>
+                                <option value="6 months">6 Months</option>
+                                <option selected value="all">All Time</option>
+                            </select>
+                        </div>
+                    </form>
+                    <!--<button id="apply_filter" class="btn btn-outline-secondary">Apply Filter</button>-->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/charts">
+                        <span data-feather="grid"></span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/charts/network">
+                        <span data-feather="git-merge"></span>
+                        Network
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <div class="sidebar-accordion">
+                        <a class="nav-link" data-toggle="collapse" href="#playersCard" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <span data-feather="plus-square" id="players-plus"></span><span data-feather="minus-square" class="d-none" id="players-minus"></span> Players
+                        </a>
+                        <div class="collapse navbar-collapse" id="playersCard">
+                            <ul class="ml-5 py-1 nav nav-sublist" id="nav-players-list">
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>

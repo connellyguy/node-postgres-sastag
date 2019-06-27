@@ -12,7 +12,7 @@ function navPlayerList() {
         console.log('Error on ajax request');
     }
     }).done(function() { 
-
+        feather.replace();
     });
 }
 
