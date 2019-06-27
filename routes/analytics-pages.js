@@ -38,5 +38,18 @@ module.exports = {
                 }
             }
         });
-    }
+    },
+
+    getNetwork: (req, res) => {
+        if(typeof req.userContext != 'undefined') {
+            res.render('network-chart.ejs', {
+                title: 'Welcome to SAS Tag | Charts',
+                user: req.userContext.userinfo,
+            });
+        } else {
+            res.render('network-chart.ejs', {
+                title: 'Welcome to SAS Tag | Charts',
+            });
+        }
+    },
 };

@@ -10,6 +10,13 @@
     min-width: 400px;
 }
 
+.network-holder {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
 .dash-wrapper {
     margin-top: 80px;
 }
