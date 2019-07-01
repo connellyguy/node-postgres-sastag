@@ -80,7 +80,30 @@ sigma.classes.graph.addMethod('neighbors', function(nodeId) {
       	neighbors[k] = this.nodesIndex[k];
 
     return neighbors;
-  });
+});
+
+sigma.canvas.nodes.border = function(node, context, settings) {
+	var prefix = settings('prefix') || '';
+
+	context.fillStyle = node.color || settings('defaultNodeColor');
+	context.beginPath();
+	context.arc(
+		node[prefix + 'x'],
+		node[prefix + 'y'],
+		node[prefix + 'size'],
+		0,
+		Math.PI * 2,
+		true
+	);
+
+	context.closePath();
+	context.fill();
+
+	// Adding a border
+	context.lineWidth = node.borderWidth || 5;
+	context.strokeStyle = node.borderColor || '#8332AC';
+	context.stroke();
+};
 
 s = new sigma({})
 
@@ -113,6 +136,7 @@ function drawNetworkGraph() {
 
 		s.graph.nodes().forEach(function(n) {
 	        n.originalColor = n.color;
+	        n.originalBorderColor = n.borderColor;
 	    });
 	    s.graph.edges().forEach(function(e) {
 	        e.originalColor = e.color;
@@ -124,10 +148,13 @@ function drawNetworkGraph() {
 	        toKeep[nodeId] = c.data.node;
 
 	        s.graph.nodes().forEach(function(n) {
-				if (toKeep[n.id])
+				if (toKeep[n.id]) {
 					n.color = n.originalColor;
-				else
+					n.borderColor = n.originalBorderColor;
+				}else {
 					n.color = '#eee';
+					n.borderColor = '#eee';
+				}
 	        });
 
 	        s.graph.edges().forEach(function(e) {
@@ -143,6 +170,7 @@ function drawNetworkGraph() {
 	    s.bind('clickStage', function(e) {
 	        s.graph.nodes().forEach(function(n) {
 	          	n.color = n.originalColor;
+	          	n.borderColor = n.originalBorderColor;
 	        });
 
 	        s.graph.edges().forEach(function(e) {
@@ -150,6 +178,22 @@ function drawNetworkGraph() {
 	        });
 
 	        s.refresh();
+	    });
+	}).then(function() {
+		$.ajax({
+		    url: "/db/lasttag/",
+		    success: function (result) {
+		    	s.graph.nodes().forEach(function(n) {
+					if (n.id == ('p' + result[0].tagee_id)) {
+						n.type = 'border';
+					};
+		        });
+			},
+		    error: function (err) {
+		        console.log('Error on ajax request');
+		    }
+	    }).done(function() {
+	    	s.refresh();
 	    });
 	});
 }

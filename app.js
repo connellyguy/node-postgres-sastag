@@ -20,7 +20,7 @@ const {getPlayerList} = require('./routes/player-list');
 const {getTagPage, tagPlayer} = require('./routes/tag');
 const {addPlayerPage, addPlayer, deletePlayer, editPlayer, editPlayerPage} = require('./routes/player-management');
 const {getDashboard, getPlayerCharts, getNetwork} = require('./routes/analytics-pages');
-const {getTimeline, getLongTime, getShortAvg, getMostTag, getPlayers, getTags, getNumTags, getNumTagsAgg} = require('./routes/db-queries');
+const {getLastTag, getTimeline, getLongTime, getShortAvg, getMostTag, getPlayers, getTags, getNumTags, getNumTagsAgg} = require('./routes/db-queries');
 const port = 5000;
 
 
@@ -166,6 +166,7 @@ app.get('/charts/network', getNetwork);
 app.get('/db/player/:id/:timeframe', getTags);
 app.get('/db/numtags/:timeframe', getNumTags);
 app.get('/db/numtags/aggregate/:timeframe', getNumTagsAgg);
+app.get('/db/lasttag/', getLastTag);
 app.post('/tag/:id', isPlayerIt, tagPlayer);
 app.post('/players/add', loginRequired, addPlayer);
 app.post('/players/edit/:id', isPlayerCurrentId, editPlayer);

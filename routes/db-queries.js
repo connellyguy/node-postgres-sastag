@@ -2,6 +2,22 @@ let v_taggregate = '(SELECT a.it_id, a.first_name, a.last_name, a.user_name, a.i
 
 module.exports = {
 
+    getLastTag: (req, res, next) => {
+        var query = '';
+        Promise.resolve()
+        .then(()=> {
+                return Promise.resolve("SELECT * FROM v_last_tag;");
+            }).then((query) => {
+                db.query(query, (err, result) => {
+                    if (err) {
+                        return next(createError(500,err));
+                    } else { 
+                        return res.json(result.rows); 
+                    }
+                })
+        }).catch(() => {return next(createError(500))});
+    },
+    
     getTimeline: (req, res, next) => {
         /* Returns data for the tag timeline chart */
         let timeframe = req.params.timeframe;

@@ -6,6 +6,9 @@
 <!-- Chart.js stylesheet -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
 
+<!-- Datatables bootstrap4 stylesheet -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/dataTables.bootstrap4.min.css" integrity="sha256-F+DaKAClQut87heMIC6oThARMuWne8+WzxIDT7jXuPA=" crossorigin="anonymous" />
+
 <% include partials/header-bottom-half.ejs %>
 
 <div class="container-fluid wrapper dash-wrapper">
@@ -18,39 +21,11 @@
                     <div class="mb-lg-4 chart-holder" id="longtimeDiv">
                         <canvas id="longtimeChart"></canvas>
                     </div>
-                    <!--<div class="table-responsive-md">
-                        <table id="longtimeTable" class="table table-hovered table-responsive-md table-striped shadow">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col" style="width:10% !important">Rank</th>
-                                    <th scope="col" style="width:55% !important">Player</th>
-                                    <th scope="col" class="text-right" style="width:35% !important">Total Time as IT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
-                    </div>-->
                 </div>
                 <div class="col-lg-6">
                     <div class="mb-lg-4 chart-holder" id="shortavgDiv">
                         <canvas id="shortavgChart"></canvas>
                     </div>
-                    <!--<div class="table-responsive-md">
-                        <table id="shortavgTable" class="table table-hovered table-responsive-md table-striped shadow">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col" style="width:10% !important">Rank</th>
-                                    <th scope="col" style="width:55% !important">Player</th>
-                                    <th scope="col" class="text-right" style="width:35% !important">Avg Time as IT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
-                    </div>-->
                 </div>
             </div>
             <div class="row">
@@ -64,10 +39,10 @@
                         <table id="detailTable" class="table table-hovered table-responsive-md table-striped shadow">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col" style="width:10% !important">ID</th>
-                                    <th scope="col" style="width:24% !important">Player</th>
-                                    <th scope="col" class="text-right" style="width:22% !important">Time as IT</th>
-                                    <th scope="col" class="text-right" style="width:22% !important">Avg Time as IT</th>
+                                    <th scope="col" class="no-sort" style="width:10% !important">ID</th>
+                                    <th scope="col" class="no-sort" style="width:24% !important">Player</th>
+                                    <th scope="col" class="text-right dur-col" style="width:22% !important">Time as IT</th>
+                                    <th scope="col" class="text-right dur-col" style="width:22% !important">Avg Time as IT</th>
                                     <th scope="col" class="text-right" style="width:22% !important">Times Tagged</th>
                                 </tr>
                             </thead>
@@ -76,20 +51,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <!--<div class="table-responsive-md">
-                        <table id="mosttagTable" class="table table-hovered table-responsive-md table-striped shadow">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col" style="width:10% !important">Rank</th>
-                                    <th scope="col" style="width:55% !important">Player</th>
-                                    <th scope="col" class="text-right" style="width:35% !important">Times Tagged</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
-                    </div>-->
                 </div>
             </div>
     </main>
@@ -97,14 +58,22 @@
 </div>
 </div>
 
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo= sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script>
+<% include partials/footer-scripts.ejs %>
 
 <!-- Google Charts js files -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <!-- Chart.js files -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+
+<!-- Chart.js datalabels plugin -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.6.0/dist/chartjs-plugin-datalabels.min.js" integrity="sha256-/jAaCyGvq5kToGoJwyXMJI2BMv/hQKikINpyvsOkAsw=" crossorigin="anonymous"></script>
+
+<!-- Datatables jQuery JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js" integrity="sha256-t5ZQTZsbQi8NxszC10CseKjJ5QeMw5NINtOXQrESGSU=" crossorigin="anonymous"></script>
+
+<!-- Datatables Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/dataTables.bootstrap4.min.js" integrity="sha256-hJ44ymhBmRPJKIaKRf3DSX5uiFEZ9xB/qx8cNbJvIMU=" crossorigin="anonymous"></script>
 
 <!-- moment.js library (used for time computations) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>

@@ -1,5 +1,10 @@
+Chart.defaults.global.plugins.datalabels.display = false;
+
 function updateAllData() {
     getPlayerLineData();
+    getPlayerTagsData();
+    getPlayerTimeData();
+    getPlayerAvgData();
     updateTimeframeHeader();
 }
 
@@ -44,14 +49,261 @@ function getPlayerLineData() {
         console.log('Error on ajax request');
     }
     }).done(function() {
-        $("#playerlineDiv").empty();
-        $("div#playerlineDiv").append('<canvas id="playerLineChart"></canvas>');
-        var ctx = document.getElementById('playerLineChart').getContext('2d'); 
-        drawPlayerLineGraph(dates, totals, avg, 'rgba(74, 109, 144, 1)', 'rgba(74, 109, 144, 0.2)', 'rgba(87, 167, 115, 1)', 'rgba(87, 167, 115, 0.2)', "IT Duration", "Avg Time as IT", ctx);
+        var allTimeAvg = [];
+        $.ajax({
+        url: "/db/shortavg/all",
+        success: function(result){
+            var playerRow = result.find(r => {
+                return r.it_id == PLAYERID;
+            });
+            dates.forEach((tagDay, index) => {
+                allTimeAvg.push(playerRow.avg_time_as_it);
+            });
+        },
+        error: function(err) {
+            console.log('Error on ajax request');
+        }
+        }).done(function() {
+            console.log(allTimeAvg);
+            $("#playerlineDiv").empty();
+            $("div#playerlineDiv").append('<canvas id="playerLineChart"></canvas>');
+            var ctx = document.getElementById('playerLineChart').getContext('2d'); 
+            console.log(allTimeAvg);
+            drawPlayerLineGraph(dates, totals, avg, allTimeAvg, 'rgba(74, 109, 144, 1)', 'rgba(74, 109, 144, 0.2)', 'rgba(87, 167, 115, 1)', 'rgba(87, 167, 115, 0.2)', 'rgba(54, 162, 235, 1)', 'rgba(0,0,0,0)', "IT Duration", "Avg Time as IT", "Avg Time as IT (All Time)", ctx);
+        });
+
     });
 }
 
-function drawPlayerLineGraph(dates, dataTotal, dataAvg, lineColorTotal, fillColorTotal, lineColorAvg, fillColorAvg, labelTotal, labelAvg, ctx) {
+function getPlayerTagsData() {
+    var player_names = [];
+    var player_total;
+    var max_total = 0;
+    $.ajax({
+    url: "/db/mosttag/" + getTimeFrame(),
+    beforeSend: function(){
+        $("#playerTagsDiv").html(getLoadSVG());
+    },
+    success: function (result) {
+            result.forEach((player, index) => {
+                if (player.it_id == PLAYERID) {
+                    player_total = player.number_of_its;
+                };
+                if (+player.number_of_its > +max_total) {
+                    max_total = player.number_of_its;
+                };
+
+            });
+        },
+    error: function (err) {
+        console.log('Error on ajax request');
+    }
+    }).done(function() { 
+        $("#playerTagsDiv").empty();
+        $("div#playerTagsDiv").append('<canvas id="playerTagsGauge"></canvas>');
+        var ctx = document.getElementById('playerTagsGauge').getContext('2d');
+        drawPlayerTagGauge(['Player Tags','Difference from Max'], [player_total, ((max_total - player_total) < max_total/50 ? max_total/50 : (max_total - player_total))], ctx);
+    });
+}
+
+function getPlayerTimeData() {
+    var player_names = [];
+    var player_total;
+    var max_total = 0;
+    $.ajax({
+    url: "/db/longtime/" + getTimeFrame(),
+    beforeSend: function(){
+        $("#playerTimeDiv").html(getLoadSVG());
+    },
+    success: function (result) {
+            result.forEach((player, index) => {
+                if (player.it_id == PLAYERID) {
+                    player_total = player.time_as_it;
+                };
+                if (+player.time_as_it > +max_total) {
+                    max_total = player.time_as_it;
+                };
+
+            });
+        },
+    error: function (err) {
+        console.log('Error on ajax request');
+    }
+    }).done(function() { 
+        $("#playerTimeDiv").empty();
+        $("div#playerTimeDiv").append('<canvas id="playerTimeGauge"></canvas>');
+        var ctx = document.getElementById('playerTimeGauge').getContext('2d');
+        drawPlayerTimeGauge(['Player Time','Difference from Max'], [player_total, ((max_total - player_total) < max_total/50 ? max_total/50 : (max_total - player_total))], "Total Time as IT", ctx);
+    });
+}
+
+function getPlayerAvgData() {
+    var player_names = [];
+    var player_total;
+    var max_total = 0;
+    $.ajax({
+    url: "/db/shortavg/" + getTimeFrame(),
+    beforeSend: function(){
+        $("#playerAvgDiv").html(getLoadSVG());
+    },
+    success: function (result) {
+            result.forEach((player, index) => {
+                if (player.it_id == PLAYERID) {
+                    player_total = player.avg_time_as_it;
+                };
+                if (+player.avg_time_as_it > +max_total) {
+                    max_total = player.avg_time_as_it;
+                };
+
+            });
+        },
+    error: function (err) {
+        console.log('Error on ajax request');
+    }
+    }).done(function() { 
+        $("#playerAvgDiv").empty();
+        $("div#playerAvgDiv").append('<canvas id="playerAvgGauge"></canvas>');
+        var ctx = document.getElementById('playerAvgGauge').getContext('2d');
+        drawPlayerTimeGauge(['Player Time','Difference from Max'], [player_total, ((max_total - player_total) < max_total/50 ? max_total/50 : (max_total - player_total))], "Average Time as IT", ctx);
+    });
+}
+
+function drawPlayerTimeGauge(labels, data, title, ctx) {
+    var chart = new Chart(ctx, {
+        type:"doughnut",
+        data: {
+            labels : labels,
+            datasets: [{
+                label: "Gauge",
+                data : data,
+                backgroundColor: [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                ]
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: title,
+                fontSize: 20,
+            },
+            circumference: Math.PI,
+            rotation : Math.PI,
+            cutoutPercentage : 80, // precent
+            plugins: {
+                datalabels: {
+                    display: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    borderColor: '#ffffff',
+                    color: function(context) {
+                        return context.dataset.backgroundColor;
+                    },
+                    font: function(context) {
+                        var w = context.chart.width;
+                        return {
+                          size: w < 512 ? 18 : 20
+                        }
+                    },
+                    align: 'start',
+                    anchor: 'start',
+                    offset: 10,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    formatter: function(value, context) {
+                        var i = context.dataIndex;
+                        var len = context.dataset.data.length - 1;
+                        if(i == len){
+                            return null;
+                        }
+                        return formatSecAsDur(value);
+                    },
+                },
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            layout: {
+                padding: {
+                    bottom: 10,
+                }
+            }
+        }
+    });
+}
+
+function drawPlayerTagGauge(labels, data, ctx) {
+    var chart = new Chart(ctx, {
+        type:"doughnut",
+        data: {
+            labels : labels,
+            datasets: [{
+                label: "Gauge",
+                data : data,
+                backgroundColor: [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                ]
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Times IT",
+                fontSize: 20,
+            },
+            circumference: Math.PI,
+            rotation : Math.PI,
+            cutoutPercentage : 80, // precent
+            plugins: {
+                datalabels: {
+                    display: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    borderColor: '#ffffff',
+                    color: function(context) {
+                        return context.dataset.backgroundColor;
+                    },
+                    font: function(context) {
+                        var w = context.chart.width;
+                        return {
+                          size: w < 512 ? 18 : 20
+                        }
+                    },
+                    align: 'start',
+                    anchor: 'start',
+                    offset: 10,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    formatter: function(value, context) {
+                        var i = context.dataIndex;
+                        var len = context.dataset.data.length - 1;
+                        if(i == len){
+                            return null;
+                        }
+                        return value + (value == 1 ? ' Tag' : ' Tags');
+                    },
+                },
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            layout: {
+                padding: {
+                    bottom: 10,
+                }
+            }
+        }
+    });
+}
+
+
+function drawPlayerLineGraph(dates, dataTotal, dataAvg, dataATA, lineColorTotal, fillColorTotal, lineColorAvg, fillColorAvg, lineColorATA, fillColorATA, labelTotal, labelAvg, labelATA, ctx) {
     var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -74,7 +326,15 @@ function drawPlayerLineGraph(dates, dataTotal, dataAvg, lineColorTotal, fillColo
 			borderColor: lineColorAvg,
 			backgroundColor: fillColorAvg,
 			borderDash: [15,5],
-      	}]
+      	}, {
+            type: 'line',
+            label: labelATA,
+            showLine: true,
+            data: dataATA,
+            lineTension: 0,
+            borderColor: lineColorATA,
+            backgroundColor: fillColorATA,
+        }],
     },
 	options: {
 		scales: {

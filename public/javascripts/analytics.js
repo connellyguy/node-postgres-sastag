@@ -19,6 +19,7 @@ function drawChart(chartData) {
     dataTable.addColumn({ type: 'string', id: 'IT' });
     dataTable.addColumn({ type: 'string', id: 'dummy bar label' });
     dataTable.addColumn({ type: 'string', role: 'tooltip', 'p': {'html': true} });
+    dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
     dataTable.addColumn({ type: 'date', id: 'Start' });
     dataTable.addColumn({ type: 'date', id: 'End' });
     dataTable.addRows(chartData);
@@ -112,6 +113,14 @@ function getPlayerColor(player_id, opacity) {
     }
 }
 
+function rgb2hex(rgb){
+ rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+ return (rgb && rgb.length === 4) ? "#" +
+  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+}
+
 function drawBarGraph(data_labels, data, bar_color, border_color, data_label, ctx) {
     var myChart = new Chart(ctx, {
         type: 'horizontalBar',
@@ -170,26 +179,38 @@ function drawBarGraph(data_labels, data, bar_color, border_color, data_label, ct
 
 function drawDoughnutChart(data_labels, data, segment_color, data_label, ctx) {
     var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: data_labels,
-                datasets: [{
-                    label: data_label,
-                    data: data,
-                    backgroundColor: segment_color,
-                }]
-            },
-            options: {
-                legend: {
-                    display: false,
-                },
-                title: {
+        type: 'doughnut',
+        data: {
+            labels: data_labels,
+            datasets: [{
+                label: data_label,
+                data: data,
+                backgroundColor: segment_color,
+            }]
+        },
+        options: {
+            plugins: {
+                datalabels: {
                     display: true,
-                    text: data_label,
-                    fontSize: 20,
-                }
+                    anchor: 'center',
+                    align: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    borderColor: '#fff',
+                    color: '#fff',
+                    borderRadius: 4,
+                    borderWidth: 1,
+                },
             },
-        });
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: data_label,
+                fontSize: 20,
+            }
+        },
+    });
 }
 
 // Initialize moment.js
