@@ -17,8 +17,8 @@ module.exports = {
 
         },
     addPlayer: (req, res, next) => {
-        if (!req.files) {
-            return next(createError(400,"No files were uploaded."));
+        if (!req.files || !req.files.image) {
+            return next(createError(400,"No image was uploaded."));
         }
         let login_email = req.userContext.userinfo.preferred_username;
         let message = '';
@@ -27,6 +27,8 @@ module.exports = {
         let username = req.body.username;
         let email = req.body.email;
         let subscribe = (req.body.subscribe === "yes") ? 'TRUE' : 'FALSE';
+        let hex_color = req.body.color.replace('#','');
+        let color = parseInt(hex_color.substring(0,2), 16) + ',' + parseInt(hex_color.substring(2,4), 16) + ',' + parseInt(hex_color.substring(4,6), 16);
         let uploadedFile = req.files.image;
         let image_name = uploadedFile.name;
         let fileExtension = uploadedFile.mimetype.split('/')[1];
@@ -34,7 +36,7 @@ module.exports = {
         let added_by = 0;
 
         const usernameQuery = {
-            text: "SELECT * FROM v_players WHERE user_name = $1",
+            text: "SELECT * FROM users WHERE user_name = $1",
             values: [username],
         };
 
@@ -67,8 +69,8 @@ module.exports = {
                             }
                             // send the player's details to the database
                             const query = {
-                                text: "INSERT INTO users (first_name, last_name, image, user_name, email_address, subscribe, added_by) VALUES ($1, $2, $3, $4, $5, $6, $7);",
-                                values: [first_name, last_name, image_name, username, email, subscribe, added_by]
+                                text: "INSERT INTO users (first_name, last_name, image, user_name, email_address, subscribe, added_by, color) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
+                                values: [first_name, last_name, image_name, username, email, subscribe, added_by, color]
                             };
                             db.query(query, (err, result) => {
                                 if (err) {
@@ -92,7 +94,7 @@ module.exports = {
     editPlayerPage: (req, res, next) => {
         let playerId = req.params.id;
         let query = {
-            text: "SELECT * FROM v_players WHERE id = $1 ",
+            text: "SELECT * FROM users WHERE id = $1 ",
             values: [playerId]
         };
         db.query(query, (err, result) => {
@@ -113,9 +115,11 @@ module.exports = {
         let first_name = req.body.first_name;
         let last_name = req.body.last_name;
         let username = req.body.username;
+        let hex_color = req.body.color.replace('#','');
+        let color = parseInt(hex_color.substring(0,2), 16) + ',' + parseInt(hex_color.substring(2,4), 16) + ',' + parseInt(hex_color.substring(4,6), 16);
         let subscribe = (req.body.subscribe === "yes") ? 'TRUE' : 'FALSE';
 
-        if (Object.keys(req.files).length) {
+        if (req.files && req.files.image) {
             let uploadedFile = req.files.image;
             let image_name = uploadedFile.name;
             let fileExtension = uploadedFile.mimetype.split('/')[1];
@@ -133,8 +137,8 @@ module.exports = {
             }
 
             let query = {
-            text: "UPDATE users SET first_name = $1, last_name = $2, image=$3, subscribe=$5 WHERE users.id = $4",
-            values: [first_name, last_name, image_name, playerId, subscribe]
+            text: "UPDATE users SET first_name = $1, last_name = $2, image=$3, subscribe=$5, color=$6 WHERE users.id = $4",
+            values: [first_name, last_name, image_name, playerId, subscribe, color]
             };
             db.query(query, (err, result) => {
                 if (err) {
@@ -144,8 +148,8 @@ module.exports = {
             });
         } else {
             let query = {
-            text: "UPDATE users SET first_name = $1, last_name = $2, subscribe=$4 WHERE users.id = $3",
-            values: [first_name, last_name, playerId, subscribe]
+            text: "UPDATE users SET first_name = $1, last_name = $2, subscribe=$4, color=$5 WHERE users.id = $3",
+            values: [first_name, last_name, playerId, subscribe, color]
             };
             db.query(query, (err, result) => {
                 if (err) {

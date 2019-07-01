@@ -62,8 +62,23 @@ function formatSecAsDays(secondsIn) {
     return outstr;
 }
 
+var playerColors = {};
+$.ajax({
+    url: '/db/playercolors',
+    success: function(result) {
+        result.forEach((player, index) => {
+            id = player.id;
+            color = player.color;
+            playerColors[id] = color;
+        });
+    },
+    error: function(error) {
+        console.log('Error retrieving player colors');
+    },
+});
+
 function getPlayerColor(player_id, opacity) {
-    switch (player_id) {
+    /*switch (player_id) {
         case 1:
             return 'rgba(255,171,132,' + opacity + ')';
         break; 
@@ -110,15 +125,12 @@ function getPlayerColor(player_id, opacity) {
 
         default:
             return 'rgba(92,128,188,' + opacity + ')';
-    }
-}
-
-function rgb2hex(rgb){
- rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
- return (rgb && rgb.length === 4) ? "#" +
-  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+    }*/
+    if(playerColors.hasOwnProperty(player_id)){
+        return 'rgba(' + playerColors[player_id] + ',' + opacity + ')';
+    } else {
+        return 'rgba(92,128,188,' + opacity + ')';
+    };
 }
 
 function drawBarGraph(data_labels, data, bar_color, border_color, data_label, ctx) {

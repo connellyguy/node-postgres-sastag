@@ -17,7 +17,20 @@ module.exports = {
                 })
         }).catch(() => {return next(createError(500))});
     },
-    
+
+    getPlayerColors: (req, res, next) => {
+        let query = {
+            text: 'select id, color from users;',
+        };
+        db.query(query, (err, result) => {
+            if (err) {
+                return next(createError(500,err));
+            } else { 
+                return res.json(result.rows);
+            }
+        });
+    },
+
     getTimeline: (req, res, next) => {
         /* Returns data for the tag timeline chart */
         let timeframe = req.params.timeframe;

@@ -92,10 +92,10 @@ function getChartData() {
                     dataRow.push(tagger_full_name);
                     dataRow.push(' ');
                     dataRow.push(genTooltip(prev_time, tag_time, prev_tagger_full_name, tagee_full_name, tagger_full_name));
-                    dataRow.push(rgb2hex(getPlayerColor(tag.tagger_id, 1)))
+                    dataRow.push(rgb2hex(getPlayerColor(tag.tagger_id, 1)));
                     dataRow.push(prev_time);
                     dataRow.push(tag_time);
-                    dataRows.push(dataRow);
+                    dataRows.push(dataRow);                  
                 };
                 prev_time = tag_time;
             });
