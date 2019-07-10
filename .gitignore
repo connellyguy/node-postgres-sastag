@@ -7,6 +7,7 @@ okta_notes.txt
 # Node modules #
 ###################
 node_modules/*
+sastag-client/node_modules/*
 
 # Compiled source #
 ###################
