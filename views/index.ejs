@@ -1,19 +1,22 @@
 <% include partials/header.ejs %>
     <div class="container jumbotron text-center text-wrap">
         <div class="unselectable">
-            <img src="/assets/img/<%= player.tagee_image %>" class="rounded-circle it-img" alt="IT">
-            <% if (typeof user != "undefined" && user.preferred_username == player.tagee_email_address) { %>
-                <h1 class="font-weight-bolder display-4">YOU</h1>
-                <h1>have been <span class="display-5 font-weight-bold">IT</span> for</h1>
-            <% } else {%>
-            <h1 class="font-weight-bolder display-4"><%= player.tagee_first_name %> <%= player.tagee_last_name %></h1>
-            <h1>has been <span class="display-5 font-weight-bold">IT</span> for</h1>
-            <% } %>
+            <div id="whos-it">
+                <img src="/assets/img/<%= player.tagee_image %>" class="rounded-circle it-img" alt="IT">
+                <% if (typeof user != "undefined" && user.preferred_username == player.tagee_email_address) { %>
+                    <h1 class="font-weight-bolder display-4">YOU</h1>
+                    <h1>have been <span class="display-5 font-weight-bold">IT</span> for</h1>
+                <% } else {%>
+                <h1 class="font-weight-bolder display-4"><%= player.tagee_first_name %> <%= player.tagee_last_name %></h1>
+                <h1>has been <span class="display-5 font-weight-bold">IT</span> for</h1>
+                <% } %>
+            </div>
             <% startStamp = player.tag_time.getTime(); %>
             <h1 id="strTime" class="font-weight-bold">
             <script>
                 // Set the date we're counting up from
                 var startStamp = new Date("<%= player.tag_time %>").getTime();
+                var tagID = <%= player.tag_id %>;
                 var x = setInterval(updateTime, 1000);
 
                 // Update the count down every 1 second
@@ -108,4 +111,26 @@
 </div>
 </div>
 <% include partials/footer-scripts.ejs %>
+<script>
+var y = setInterval(updateData, 15000);
+function updateData() {
+    $.ajax({
+        url: '/db/lasttag',
+        success: function(result) {
+            let tag = result[0];
+            if (tagID !== tag.tag_id) {
+                $('#whos-it').html(
+                    '<img src="/assets/img/' + tag.tagee_image + '" class="rounded-circle it-img" alt="IT">' +
+                    '<h1 class="font-weight-bolder display-4">' + tag.tagee_first_name + ' ' + tag.tagee_last_name + '</h1>' +
+                    '<h1>has been <span class="display-5 font-weight-bold">IT</span> for</h1>');
+                startStamp = new Date(tag.tag_time).getTime();
+                tagID = tag.tag_id;
+            };
+        },
+        error: function(error) {
+            console.log('Error retrieving player colors');
+        },
+    });
+}
+</script>
 <% include partials/footer.ejs %>
