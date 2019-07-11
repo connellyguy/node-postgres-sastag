@@ -1,0 +1,30 @@
+.fullwidth-chart {
+    width: 100%;
+}
+
+.chart-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    min-width: 400px;
+}
+
+.gauge-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    min-width: 200px;
+}
+
+.network-holder {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
+.dash-wrapper {
+    margin-top: 80px;
+}
