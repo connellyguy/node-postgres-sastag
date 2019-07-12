@@ -71,7 +71,6 @@ function GetFeatherObject(props) {
 }
 
 function SidebarLink(props) {
-
     return (
         <Nav.Item as="li">
             <Nav.Link href={props.endpoint}><GetFeatherObject feathername={props.feathername} /> {props.linkText}</Nav.Link>
@@ -87,6 +86,28 @@ class SiteSidebar extends React.Component {
             playersExpanded: false,
         };
     }
+
+    togglePlayers() {
+        if (this.state.playersExpanded) {
+            this.collapsePlayers();
+        } else {
+            this.expandPlayers();
+        }
+    }
+
+    expandPlayers (){
+        this.setState({
+            playersExpanded: true,
+        });
+    }
+
+
+    collapsePlayers () {
+        this.setState({
+            playersExpanded: false,
+        });
+    }
+
 
     render() {
         return (
@@ -109,7 +130,9 @@ class SiteSidebar extends React.Component {
                         </Nav.Item>
                         <SidebarLink feathername="Grid" endpoint="#" linkText="Dashboard" />
                         <SidebarLink feathername="GitMerge" endpoint="#" linkText="Network" />
-                        <SidebarLink feathername={(this.state.playersExpanded ? "MinusSquare" : "PlusSquare")} endpoint="#" linkText="Players" />
+                        <Nav.Item as="li" onClick={() => this.togglePlayers()}>
+                            <Nav.Link><GetFeatherObject feathername={(this.state.playersExpanded ? "MinusSquare" : "PlusSquare")} /> Players</Nav.Link>
+                        </Nav.Item>
                     </Nav>
                 </div>
             </Nav>

@@ -20,24 +20,16 @@
 }
 
 .sidebar .nav-link {
+    z-index: 99;
+    position: relative;
     font-weight: 500;
     color: #333;
-}
-
-.sidebar .nav-link:after {
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 0;
-    background-color: #000;
-    position: absolute;
-    content: '';
     transition: all 0.25s;
+    will-change: background-color;
 }
 
-.sidebar .nav-link:hover:after {
-    width: 100%;
-    height: 100%;
+.sidebar .nav-link:hover {
+    background-color: rgba(234,237,240,0.4);
 }
 
 .sidebar .nav-sublink {
@@ -62,6 +54,7 @@
 .sidebar .nav-link .feather {
     margin-right: 4px;
     color: #999;
+    transition: all 0.25s;
 }
 
 .sidebar .nav-link:hover .feather {
