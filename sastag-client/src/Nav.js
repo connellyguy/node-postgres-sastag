@@ -4,13 +4,15 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/analytics-sidebar.css';
 import './index.css';
-import { Menu } from 'react-feather'
+import {Menu, Grid, ArrowLeft, GitMerge, PlusSquare, MinusSquare} from 'react-feather';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import NavItem from 'react-bootstrap/NavItem';
 import NavLink from 'react-bootstrap/NavLink';
+import Form from 'react-bootstrap/Form';
+import TimeFrameContext from './timeFrameContext';
 
 
 class SiteNavbar extends React.Component {
@@ -47,11 +49,42 @@ class SiteNavbar extends React.Component {
     }
 }
 
+function GetFeatherObject(props) {
+    switch (props.feathername) {
+        case 'Grid':
+            return <Grid size={props.size || 18} color={props.color || "currentColor"} className="feather" />
+
+        case 'GitMerge':
+            return <GitMerge size={props.size || 18} color={props.color || "currentColor"} className="feather" />
+
+        case 'PlusSquare':
+            return <PlusSquare size={props.size || 18} color={props.color || "currentColor"} className="feather" />
+
+        case 'MinusSquare':
+            return <MinusSquare size={props.size || 18} color={props.color || "currentColor"} className="feather" />
+
+        default:
+            return null;
+
+    }
+
+}
+
+function SidebarLink(props) {
+
+    return (
+        <Nav.Item as="li">
+            <Nav.Link href={props.endpoint}><GetFeatherObject feathername={props.feathername} /> {props.linkText}</Nav.Link>
+        </Nav.Item>
+    );
+}
+
 class SiteSidebar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedItem: null,
+            playersExpanded: false,
         };
     }
 
@@ -60,9 +93,24 @@ class SiteSidebar extends React.Component {
             <React.Fragment>
             <Nav className={"px-0 bg-light col-sm-3 col-lg-2 sidebar" + (this.props.visible ? " active" : "")} id="sidebar">
                 <div className="sidebar-sticky">
+                    <div id="dismiss">
+                        <ArrowLeft color="#007BFF" size={24} onClick={() => this.props.hideSidebar()} />
+                    </div>
                     <div className="sidebar-header mx-4">
                         <h3 className="text-muted">Analytics Dashboard</h3>
                     </div>
+                    <Nav as="ul" className="flex-column">
+                        <Nav.Item as="li" className="mt-4 mx-3">
+                            <Form>
+                                <Form.Row className="mb-3">
+                                    <TimeFrameContext />
+                                </Form.Row>
+                            </Form>
+                        </Nav.Item>
+                        <SidebarLink feathername="Grid" endpoint="#" linkText="Dashboard" />
+                        <SidebarLink feathername="GitMerge" endpoint="#" linkText="Network" />
+                        <SidebarLink feathername={(this.state.playersExpanded ? "MinusSquare" : "PlusSquare")} endpoint="#" linkText="Players" />
+                    </Nav>
                 </div>
             </Nav>
             <Overlay visible={this.props.visible} onClick={() => this.props.hideSidebar()} />

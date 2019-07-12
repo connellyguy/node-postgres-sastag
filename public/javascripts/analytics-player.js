@@ -64,11 +64,9 @@ function getPlayerLineData() {
             console.log('Error on ajax request');
         }
         }).done(function() {
-            console.log(allTimeAvg);
             $("#playerlineDiv").empty();
             $("div#playerlineDiv").append('<canvas id="playerLineChart"></canvas>');
             var ctx = document.getElementById('playerLineChart').getContext('2d'); 
-            console.log(allTimeAvg);
             drawPlayerLineGraph(dates, totals, avg, allTimeAvg, 'rgba(74, 109, 144, 1)', 'rgba(74, 109, 144, 0.2)', 'rgba(87, 167, 115, 1)', 'rgba(87, 167, 115, 0.2)', 'rgba(54, 162, 235, 1)', 'rgba(0,0,0,0)', "IT Duration", "Avg Time as IT", "Avg Time as IT (All Time)", ctx);
         });
 
@@ -76,23 +74,21 @@ function getPlayerLineData() {
 }
 
 function getPlayerTagsData() {
-    var player_names = [];
+    var player_count;
     var player_total;
-    var max_total = 0;
+    var player_rank;
     $.ajax({
     url: "/db/mosttag/" + getTimeFrame(),
     beforeSend: function(){
         $("#playerTagsDiv").html(getLoadSVG());
     },
     success: function (result) {
+            player_count = result.length;
             result.forEach((player, index) => {
                 if (player.it_id == PLAYERID) {
                     player_total = player.number_of_its;
+                    player_rank = player.rank;
                 };
-                if (+player.number_of_its > +max_total) {
-                    max_total = player.number_of_its;
-                };
-
             });
         },
     error: function (err) {
@@ -102,28 +98,26 @@ function getPlayerTagsData() {
         $("#playerTagsDiv").empty();
         $("div#playerTagsDiv").append('<canvas id="playerTagsGauge"></canvas>');
         var ctx = document.getElementById('playerTagsGauge').getContext('2d');
-        drawPlayerTagGauge(['Player Tags','Difference from Max'], [player_total, ((max_total - player_total) < max_total/50 ? max_total/50 : (max_total - player_total))], ctx);
+        drawPlayerTagGauge(['Player Tags','Difference from Max'], [player_rank, (player_count - player_rank)], player_total, ctx);
     });
 }
 
 function getPlayerTimeData() {
-    var player_names = [];
+    var player_count;
     var player_total;
-    var max_total = 0;
+    var player_rank;
     $.ajax({
     url: "/db/longtime/" + getTimeFrame(),
     beforeSend: function(){
         $("#playerTimeDiv").html(getLoadSVG());
     },
     success: function (result) {
+            player_count = result.length;
             result.forEach((player, index) => {
                 if (player.it_id == PLAYERID) {
                     player_total = player.time_as_it;
+                    player_rank = player.rank;
                 };
-                if (+player.time_as_it > +max_total) {
-                    max_total = player.time_as_it;
-                };
-
             });
         },
     error: function (err) {
@@ -133,28 +127,26 @@ function getPlayerTimeData() {
         $("#playerTimeDiv").empty();
         $("div#playerTimeDiv").append('<canvas id="playerTimeGauge"></canvas>');
         var ctx = document.getElementById('playerTimeGauge').getContext('2d');
-        drawPlayerTimeGauge(['Player Time','Difference from Max'], [player_total, ((max_total - player_total) < max_total/50 ? max_total/50 : (max_total - player_total))], "Total Time as IT", ctx);
+        drawPlayerTimeGauge(['Player Time','Difference from Max'], [player_rank, (player_count - player_rank)], player_total, "Total Time as IT", ctx);
     });
 }
 
 function getPlayerAvgData() {
-    var player_names = [];
+    var player_count;
     var player_total;
-    var max_total = 0;
+    var player_rank;
     $.ajax({
     url: "/db/shortavg/" + getTimeFrame(),
     beforeSend: function(){
         $("#playerAvgDiv").html(getLoadSVG());
     },
     success: function (result) {
+            player_count = result.length;
             result.forEach((player, index) => {
                 if (player.it_id == PLAYERID) {
                     player_total = player.avg_time_as_it;
+                    player_rank = player.rank;
                 };
-                if (+player.avg_time_as_it > +max_total) {
-                    max_total = player.avg_time_as_it;
-                };
-
             });
         },
     error: function (err) {
@@ -164,11 +156,11 @@ function getPlayerAvgData() {
         $("#playerAvgDiv").empty();
         $("div#playerAvgDiv").append('<canvas id="playerAvgGauge"></canvas>');
         var ctx = document.getElementById('playerAvgGauge').getContext('2d');
-        drawPlayerTimeGauge(['Player Time','Difference from Max'], [player_total, ((max_total - player_total) < max_total/50 ? max_total/50 : (max_total - player_total))], "Average Time as IT", ctx);
+        drawPlayerTimeGauge(['Player Time','Difference from Max'], [player_rank, (player_count - player_rank)], player_total, "Average Time as IT", ctx);
     });
 }
 
-function drawPlayerTimeGauge(labels, data, title, ctx) {
+function drawPlayerTimeGauge(labels, data, realValue, title, ctx) {
     var chart = new Chart(ctx, {
         type:"doughnut",
         data: {
@@ -216,7 +208,7 @@ function drawPlayerTimeGauge(labels, data, title, ctx) {
                         if(i == len){
                             return null;
                         }
-                        return formatSecAsDur(value);
+                        return formatSecAsDur(realValue);
                     },
                 },
             },
@@ -235,7 +227,7 @@ function drawPlayerTimeGauge(labels, data, title, ctx) {
     });
 }
 
-function drawPlayerTagGauge(labels, data, ctx) {
+function drawPlayerTagGauge(labels, data, realValue, ctx) {
     var chart = new Chart(ctx, {
         type:"doughnut",
         data: {
@@ -283,7 +275,7 @@ function drawPlayerTagGauge(labels, data, ctx) {
                         if(i == len){
                             return null;
                         }
-                        return value + (value == 1 ? ' Tag' : ' Tags');
+                        return realValue + (realValue == 1 ? ' Tag' : ' Tags');
                     },
                 },
             },

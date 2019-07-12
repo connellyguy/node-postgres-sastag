@@ -65,12 +65,12 @@ module.exports = {
         .then(()=> {
             if (timeframe == "all") {
                 return Promise.resolve({
-                    text: "SELECT * FROM " + v_taggregate + " ORDER BY time_as_it;",
+                    text: "SELECT *, rank() over (order by time_as_it ASC) as rank FROM " + v_taggregate + " ORDER BY time_as_it;",
                     values: ['999 years'],
                 });
             } else {
                 return Promise.resolve({
-                    text: "SELECT * FROM " + v_taggregate + " ORDER BY time_as_it;",
+                    text: "SELECT *, rank() over (order by time_as_it ASC) FROM " + v_taggregate + " ORDER BY time_as_it;",
                     values: [timeframe],
                 });
             }}).then((query) => {
@@ -93,12 +93,12 @@ module.exports = {
         .then(()=> {
             if (timeframe == "all") {
                 return Promise.resolve({
-                    text: "SELECT * FROM " + v_taggregate + " ORDER BY avg_time_as_it;",
+                    text: "SELECT *, rank() over (order by avg_time_as_it ASC) FROM " + v_taggregate + " ORDER BY avg_time_as_it;",
                     values: ['999 years'],
                 });
             } else {
                 return Promise.resolve({
-                    text: "SELECT * FROM " + v_taggregate + " ORDER BY avg_time_as_it;",
+                    text: "SELECT *, rank() over (order by avg_time_as_it ASC) FROM " + v_taggregate + " ORDER BY avg_time_as_it;",
                     values: [timeframe],
                 });
             }}).then((query) => {
@@ -121,12 +121,12 @@ module.exports = {
         .then(()=> {
             if (timeframe == "all") {
                 return Promise.resolve({
-                    text: "SELECT * FROM " + v_taggregate + " ORDER BY number_of_its;",
+                    text: "SELECT *, rank() over (order by number_of_its ASC) FROM " + v_taggregate + " ORDER BY number_of_its;",
                     values: ['999 years'],
                 });
             } else {
                 return Promise.resolve({
-                    text: "SELECT * FROM " + v_taggregate + " ORDER BY number_of_its;",
+                    text: "SELECT *, rank() over (order by number_of_its ASC) FROM " + v_taggregate + " ORDER BY number_of_its;",
                     values: [timeframe],
                 });
             }}).then((query) => {
