@@ -1,6 +1,6 @@
 # SAS Tag 
 
-A webapp for tracking who is IT and providing analytics for an office game of tag. Hosted on a Raspberry Pi at http://whoisitsas.com/
+A simple webapp for tracking who is IT and tag history for an office game of tag
 
 ## Description
 
@@ -39,13 +39,3 @@ Requires a .env file for configuration. Details coming later...
 
 ## Author
 Joshua Connelly
-
-## Version History
-```
-Date        Author          Description
-08Apr2019   Josh Connelly   Initial commit
-
-10Apr2019   Josh Connelly   Added modal tag window and message functionality
-
-20May2019   Josh Connelly   Added html email template for tag alerts
-```
