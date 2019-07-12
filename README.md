@@ -1,6 +1,6 @@
 # SAS Tag 
 
-A simple webapp for tracking who is IT and tag history for an office game of tag
+A webapp for tracking who is IT and providing analytics for an office game of tag. Hosted on a Raspberry Pi at http://whoisitsas.com/
 
 ## Description
 
